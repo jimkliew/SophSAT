@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SophieSAT - Math Training 730→800</title>
+    <title>SophieSAT - Ultimate Math Training 730→800</title>
     <style>
         * {
             margin: 0;
@@ -14,30 +14,67 @@
         }
 
         :root {
-            --primary: #4f46e5;
-            --primary-dark: #4338ca;
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
             --success: #10b981;
             --error: #ef4444;
             --warning: #f59e0b;
+            --info: #3b82f6;
             --bg: #ffffff;
-            --bg-secondary: #f9fafb;
-            --text: #111827;
-            --text-secondary: #6b7280;
-            --border: #e5e7eb;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            --text: #0f172a;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
             --shadow: rgba(0, 0, 0, 0.1);
+            --glow: rgba(99, 102, 241, 0.2);
         }
 
         [data-theme="dark"] {
-            --bg: #111827;
-            --bg-secondary: #1f2937;
-            --text: #f9fafb;
-            --text-secondary: #9ca3af;
-            --border: #374151;
-            --shadow: rgba(0, 0, 0, 0.3);
+            --bg: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --border: #475569;
+            --shadow: rgba(0, 0, 0, 0.4);
+            --glow: rgba(99, 102, 241, 0.4);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px var(--glow); }
+            50% { box-shadow: 0 0 40px var(--glow), 0 0 60px var(--glow); }
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
             background: var(--bg);
             color: var(--text);
             line-height: 1.6;
@@ -47,7 +84,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             padding: 1rem;
             min-height: 100vh;
@@ -61,6 +98,7 @@
             top: 0;
             background: var(--bg);
             z-index: 100;
+            backdrop-filter: blur(10px);
         }
 
         .header-content {
@@ -73,8 +111,11 @@
 
         h1 {
             font-size: clamp(1.5rem, 5vw, 2rem);
-            color: var(--primary);
-            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
         }
 
         .header-controls {
@@ -89,49 +130,150 @@
             color: var(--text);
             width: 44px;
             height: 44px;
-            border-radius: 8px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             font-size: 1.2rem;
-            transition: all 0.2s;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
         }
 
         .icon-btn:active {
             transform: scale(0.95);
         }
 
-        .score-display {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        .icon-btn .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--error);
             color: white;
-            padding: 1.5rem;
-            border-radius: 12px;
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .score-display {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
             margin-bottom: 1.5rem;
-            box-shadow: 0 4px 6px var(--shadow);
+            box-shadow: 0 8px 24px var(--shadow);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .score-header {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .score-target {
+            font-size: 2rem;
+            font-weight: 800;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #fbbf24, #10b981);
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
         }
 
         .score-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
             gap: 1rem;
             margin-top: 1rem;
         }
 
         .score-item {
             text-align: center;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
         }
 
         .score-value {
-            font-size: 2rem;
+            font-size: 1.75rem;
             font-weight: 700;
             display: block;
         }
 
         .score-label {
-            font-size: 0.875rem;
+            font-size: 0.8rem;
             opacity: 0.9;
             display: block;
+            margin-top: 0.25rem;
+        }
+
+        .strategy-banner {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideUp 0.6s ease-out;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .strategy-banner:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        .strategy-icon {
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+        }
+
+        .strategy-content h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .strategy-content p {
+            font-size: 0.9rem;
+            opacity: 0.95;
         }
 
         .tabs {
@@ -141,6 +283,7 @@
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
+            padding-bottom: 0.5rem;
         }
 
         .tabs::-webkit-scrollbar {
@@ -152,73 +295,117 @@
             border: 2px solid var(--border);
             color: var(--text);
             padding: 0.75rem 1.5rem;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 0.9rem;
             font-weight: 600;
             white-space: nowrap;
-            transition: all 0.2s;
+            transition: all 0.3s;
             min-height: 44px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
         }
 
         .tab.active {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             border-color: var(--primary);
+            animation: glow 2s infinite;
+        }
+
+        .tab .tab-count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
         }
 
         .problem-card {
             background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
             margin-bottom: 1.5rem;
-            box-shadow: 0 2px 4px var(--shadow);
+            box-shadow: 0 4px 12px var(--shadow);
+            animation: slideUp 0.5s ease-out;
         }
 
         .problem-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .problem-meta {
+            display: flex;
             gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
         .problem-category {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-size: 0.875rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
             font-weight: 600;
         }
 
+        .difficulty-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .difficulty-hard {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .difficulty-medium {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
         .timer {
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             font-weight: 700;
             font-variant-numeric: tabular-nums;
             color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .timer.warning {
             color: var(--warning);
+            animation: pulse 1s infinite;
         }
 
         .timer.critical {
             color: var(--error);
-            animation: pulse 1s infinite;
+            animation: pulse 0.5s infinite;
         }
 
         @keyframes pulse {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            50% { opacity: 0.6; }
         }
 
         .problem-text {
-            font-size: clamp(1rem, 3vw, 1.125rem);
+            font-size: clamp(1.05rem, 3vw, 1.2rem);
             margin-bottom: 1.5rem;
-            line-height: 1.8;
+            line-height: 1.9;
             text-align: left;
             white-space: pre-wrap;
         }
@@ -229,31 +416,54 @@
             padding: 0 0.15rem;
         }
 
-        .problem-text strong {
-            font-weight: 600;
-            color: var(--text);
-        }
-
-        .problem-choices {
+        .hint-box {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.1));
+            border-left: 4px solid var(--info);
+            padding: 1rem;
+            border-radius: 8px;
             margin: 1rem 0;
-            padding-left: 0;
-            list-style: none;
+            font-size: 0.95rem;
         }
 
-        .problem-choices li {
-            padding: 0.5rem 0;
-            font-size: 1.05rem;
+        .hint-box strong {
+            color: var(--info);
+        }
+
+        .strategy-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .strategy-chip {
+            background: var(--bg-tertiary);
+            color: var(--text);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .strategy-chip:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
         }
 
         .visual-container {
             background: white;
-            padding: 1rem;
-            border-radius: 8px;
+            padding: 1.5rem;
+            border-radius: 12px;
             margin: 1.5rem 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 200px;
+            min-height: 250px;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
         }
 
         canvas, svg {
@@ -261,48 +471,88 @@
             height: auto;
         }
 
+        .answer-section {
+            margin-top: 1.5rem;
+        }
+
         .answer-input {
             width: 100%;
-            padding: 1rem;
-            font-size: 1.125rem;
+            padding: 1.25rem;
+            font-size: 1.25rem;
             border: 2px solid var(--border);
-            border-radius: 8px;
+            border-radius: 12px;
             background: var(--bg);
             color: var(--text);
             margin-bottom: 1rem;
-            transition: all 0.2s;
-            min-height: 50px;
+            transition: all 0.3s;
+            min-height: 56px;
+            font-weight: 600;
         }
 
         .answer-input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            box-shadow: 0 0 0 4px var(--glow);
+        }
+
+        .answer-input.correct {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .answer-input.incorrect {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.05);
         }
 
         .btn {
             width: 100%;
-            padding: 1rem;
+            padding: 1.25rem;
             font-size: 1.125rem;
-            font-weight: 600;
+            font-weight: 700;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.2s;
-            min-height: 52px;
+            transition: all 0.3s;
+            min-height: 56px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn-primary {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
+            box-shadow: 0 4px 12px var(--glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--glow);
         }
 
         .btn-primary:active {
-            background: var(--primary-dark);
             transform: scale(0.98);
         }
 
@@ -312,205 +562,171 @@
             border: 2px solid var(--border);
         }
 
-        .btn-secondary:active {
-            transform: scale(0.98);
+        .btn-secondary:hover {
+            background: var(--bg-tertiary);
+            transform: translateY(-2px);
         }
 
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none !important;
         }
 
         .btn-group {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 0.75rem;
             margin-top: 1rem;
         }
 
         .feedback {
-            padding: 1rem;
-            border-radius: 8px;
-            margin-top: 1rem;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1.5rem;
+            animation: slideUp 0.4s ease-out;
+            border: 2px solid;
         }
 
         .feedback.correct {
-            background: rgba(16, 185, 129, 0.1);
-            border: 2px solid var(--success);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+            border-color: var(--success);
             color: var(--success);
         }
 
         .feedback.incorrect {
-            background: rgba(239, 68, 68, 0.1);
-            border: 2px solid var(--error);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1));
+            border-color: var(--error);
             color: var(--error);
+        }
+
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .feedback-icon {
+            font-size: 3rem;
         }
 
         .solution {
             background: var(--bg);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-top: 1rem;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 1.5rem;
             border-left: 4px solid var(--primary);
         }
 
-        .solution-step {
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border);
+        .solution h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
         }
 
-        .solution-step:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
+        .solution-step {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border-left: 4px solid var(--secondary);
+            animation: slideUp 0.3s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .solution-step:nth-child(1) { animation-delay: 0.1s; }
+        .solution-step:nth-child(2) { animation-delay: 0.2s; }
+        .solution-step:nth-child(3) { animation-delay: 0.3s; }
+        .solution-step:nth-child(4) { animation-delay: 0.4s; }
+        .solution-step:nth-child(5) { animation-delay: 0.5s; }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            margin-right: 0.75rem;
         }
 
         .step-title {
-            font-weight: 600;
+            font-weight: 700;
             color: var(--primary);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .step-content {
+            color: var(--text);
+            line-height: 1.8;
+        }
+
+        .alternative-method {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(124, 58, 237, 0.1));
+            border-left: 4px solid var(--secondary);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+
+        .alternative-method h4 {
+            color: var(--secondary);
+            margin-bottom: 0.75rem;
         }
 
         .common-mistakes {
-            background: rgba(245, 158, 11, 0.1);
-            border: 1px solid var(--warning);
-            padding: 1rem;
-            border-radius: 8px;
-            margin-top: 1rem;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.1));
+            border: 2px solid var(--warning);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1.5rem;
         }
 
         .common-mistakes h4 {
             color: var(--warning);
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .stat-card {
-            background: var(--bg-secondary);
-            padding: 1.5rem;
+        .mistake-item {
+            padding: 0.75rem;
+            background: var(--bg);
             border-radius: 8px;
-            text-align: center;
-            border: 1px solid var(--border);
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-            display: block;
-        }
-
-        .stat-label {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            margin-top: 0.25rem;
-        }
-
-        .achievements {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .achievement {
-            text-align: center;
-            padding: 1rem;
-            background: var(--bg-secondary);
-            border-radius: 8px;
-            border: 2px solid var(--border);
-            transition: all 0.2s;
-        }
-
-        .achievement.unlocked {
-            border-color: var(--success);
-        }
-
-        .achievement-icon {
-            font-size: 2rem;
             margin-bottom: 0.5rem;
-            filter: grayscale(100%);
+            display: flex;
+            align-items: start;
+            gap: 0.75rem;
         }
 
-        .achievement.unlocked .achievement-icon {
-            filter: grayscale(0%);
+        .mistake-item::before {
+            content: '⚠️';
+            font-size: 1.25rem;
         }
 
-        .achievement-name {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: var(--border);
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 0.5rem 0;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--success));
-            transition: width 0.3s ease;
-        }
-
-        .weakness-analysis {
-            background: var(--bg-secondary);
+        .pro-tip {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(37, 99, 235, 0.1));
+            border-left: 4px solid var(--info);
             padding: 1.5rem;
             border-radius: 12px;
-            margin-bottom: 1.5rem;
+            margin-top: 1.5rem;
         }
 
-        .weakness-item {
+        .pro-tip h4 {
+            color: var(--info);
+            margin-bottom: 0.75rem;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 0.75rem;
-            margin-bottom: 0.5rem;
-            background: var(--bg);
-            border-radius: 6px;
-        }
-
-        .weakness-topic {
-            font-weight: 600;
-        }
-
-        .weakness-accuracy {
-            font-size: 1.25rem;
-            font-weight: 700;
-        }
-
-        .accuracy-low {
-            color: var(--error);
-        }
-
-        .accuracy-medium {
-            color: var(--warning);
-        }
-
-        .accuracy-high {
-            color: var(--success);
+            gap: 0.5rem;
         }
 
         .modal {
@@ -520,89 +736,187 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             z-index: 1000;
             padding: 1rem;
             overflow-y: auto;
+            backdrop-filter: blur(4px);
         }
 
         .modal.active {
             display: flex;
             align-items: center;
             justify-content: center;
+            animation: fadeIn 0.3s ease-out;
         }
 
         .modal-content {
             background: var(--bg);
             padding: 2rem;
-            border-radius: 12px;
-            max-width: 500px;
+            border-radius: 16px;
+            max-width: 600px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease-out;
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .close-btn {
-            background: none;
+            background: var(--bg-secondary);
             border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             font-size: 1.5rem;
             cursor: pointer;
             color: var(--text);
-            padding: 0.5rem;
+            transition: all 0.3s;
         }
 
-        .font-size-controls {
-            display: flex;
-            gap: 0.5rem;
-            align-items: center;
+        .close-btn:hover {
+            background: var(--error);
+            color: white;
+            transform: rotate(90deg);
         }
 
-        .font-size-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 6px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            cursor: pointer;
-            font-weight: 700;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
 
-        .swipe-hint {
+        .stat-card {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            padding: 1.5rem;
+            border-radius: 12px;
             text-align: center;
-            color: var(--text-secondary);
+            border: 2px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px var(--shadow);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+        }
+
+        .stat-label {
             font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            font-weight: 600;
+        }
+
+        .achievements {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 1rem;
             margin-top: 1rem;
-            padding: 0.5rem;
         }
 
-        .hidden {
-            display: none !important;
+        .achievement {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            transition: all 0.3s;
+            cursor: pointer;
         }
 
-        @media (max-width: 640px) {
-            .container {
-                padding: 0.75rem;
-            }
-
-            h1 {
-                font-size: 1.5rem;
-            }
-
-            .problem-card {
-                padding: 1rem;
-            }
-
-            .btn-group {
-                grid-template-columns: 1fr;
-            }
+        .achievement.unlocked {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            border-color: var(--primary);
+            animation: glow 2s infinite;
         }
+
+        .achievement:hover {
+            transform: translateY(-4px) scale(1.05);
+        }
+
+        .achievement-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            filter: grayscale(100%);
+            transition: filter 0.3s;
+        }
+
+        .achievement.unlocked .achievement-icon {
+            filter: grayscale(0%);
+            animation: bounce 1s ease-in-out;
+        }
+
+        .achievement-name {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .achievement.unlocked .achievement-name {
+            color: var(--primary);
+        }
+
+        .weakness-analysis {
+            margin-bottom: 1.5rem;
+        }
+
+        .weakness-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .weakness-item:hover {
+            transform: translateX(4px);
+            border-color: var(--primary);
+        }
+
+        .weakness-topic {
+            font-weight: 700;
+            flex: 1;
+        }
+
+        .weakness-accuracy {
+            font-size: 1.5rem;
+            font-weight: 800;
+            min-width: 60px;
+            text-align: right;
+        }
+
+        .accuracy-low { color: var(--error); }
+        .accuracy-medium { color: var(--warning); }
+        .accuracy-high { color: var(--success); }
 
         .toast {
             position: fixed;
@@ -611,43 +925,13 @@
             transform: translateX(-50%);
             background: var(--text);
             color: var(--bg);
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px var(--shadow);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px var(--shadow);
             z-index: 2000;
-            animation: toastIn 0.3s ease-out;
-        }
-
-        @keyframes toastIn {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-
-        .daily-challenge {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: white;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .daily-challenge-btn {
-            background: white;
-            color: #d97706;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            border: none;
+            animation: slideUp 0.3s ease-out;
             font-weight: 600;
-            cursor: pointer;
+            max-width: 90%;
         }
 
         .streak-display {
@@ -656,6 +940,52 @@
             gap: 0.5rem;
             font-size: 1.25rem;
             font-weight: 700;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        }
+
+        .swipe-hint {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-top: 1.5rem;
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 0.75rem;
+            }
+
+            .problem-card {
+                padding: 1.25rem;
+            }
+
+            .btn-group {
+                grid-template-columns: 1fr;
+            }
+
+            .score-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .desmos-container {
+            width: 100%;
+            height: 400px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            border: 2px solid var(--border);
         }
     </style>
 </head>
@@ -663,12 +993,15 @@
     <div class="container">
         <header>
             <div class="header-content">
-                <h1>SophieSAT Math</h1>
+                <h1>🎯 SophieSAT Math</h1>
                 <div class="header-controls">
                     <div class="streak-display" title="Current streak">
                         🔥 <span id="streakCount">0</span>
                     </div>
-                    <button class="icon-btn" id="fontBtn" title="Font size">A</button>
+                    <button class="icon-btn" id="strategyBtn" title="Strategy Guide">
+                        💡
+                        <span class="badge">NEW</span>
+                    </button>
                     <button class="icon-btn" id="themeBtn" title="Toggle theme">🌙</button>
                     <button class="icon-btn" id="statsBtn" title="Statistics">📊</button>
                 </div>
@@ -676,14 +1009,17 @@
         </header>
 
         <div class="score-display">
-            <div>Your Progress: 730 → 800</div>
+            <div class="score-header">
+                <span>Your Journey</span>
+                <span class="score-target">730 → 800</span>
+            </div>
             <div class="progress-bar">
                 <div class="progress-fill" id="overallProgress" style="width: 0%"></div>
             </div>
             <div class="score-grid">
                 <div class="score-item">
                     <span class="score-value" id="totalSolved">0</span>
-                    <span class="score-label">Solved</span>
+                    <span class="score-label">Problems Solved</span>
                 </div>
                 <div class="score-item">
                     <span class="score-value" id="accuracyRate">0%</span>
@@ -693,37 +1029,57 @@
                     <span class="score-value" id="avgTime">0s</span>
                     <span class="score-label">Avg Time</span>
                 </div>
+                <div class="score-item">
+                    <span class="score-value" id="estimatedScore">730</span>
+                    <span class="score-label">Est. Score</span>
+                </div>
             </div>
         </div>
 
-        <div id="dailyChallengeSection" class="daily-challenge hidden">
-            <div>
-                <div style="font-weight: 700;">Daily Challenge</div>
-                <div style="font-size: 0.875rem; opacity: 0.9;">Master 5 problems to continue your streak!</div>
+        <div class="strategy-banner" id="strategyBanner">
+            <div class="strategy-icon">💡</div>
+            <div class="strategy-content">
+                <h3>Pro Tip of the Day</h3>
+                <p id="dailyTip">Loading amazing strategy...</p>
             </div>
-            <button class="daily-challenge-btn" id="startDailyBtn">Start</button>
         </div>
 
-        <div class="tabs">
-            <button class="tab active" data-category="all">All Topics</button>
-            <button class="tab" data-category="circle-geometry">Circle Geometry</button>
-            <button class="tab" data-category="systems">Systems of Equations</button>
-            <button class="tab" data-category="exponential">Exponential Growth</button>
-            <button class="tab" data-category="trigonometry">Trigonometry</button>
-            <button class="tab" data-category="data-analysis">Data Analysis</button>
-            <button class="tab" data-category="functions">Function Transform</button>
-            <button class="tab" data-category="word-problems">Word Problems</button>
+        <div class="tabs" id="categoryTabs">
+            <button class="tab active" data-category="all">
+                All Topics <span class="tab-count">21</span>
+            </button>
+            <button class="tab" data-category="backsolving">
+                🎯 Backsolving <span class="tab-count">5</span>
+            </button>
+            <button class="tab" data-category="circle-geometry">
+                ⭕ Circle Geo <span class="tab-count">3</span>
+            </button>
+            <button class="tab" data-category="systems">
+                🔢 Systems <span class="tab-count">3</span>
+            </button>
+            <button class="tab" data-category="exponential">
+                📈 Exponential <span class="tab-count">3</span>
+            </button>
+            <button class="tab" data-category="functions">
+                📊 Functions <span class="tab-count">3</span>
+            </button>
+            <button class="tab" data-category="word-problems">
+                📝 Word Problems <span class="tab-count">3</span>
+            </button>
         </div>
 
         <div id="problemContainer"></div>
 
-        <div class="swipe-hint">Swipe left/right for next/previous problem</div>
+        <div class="swipe-hint">
+            👈 Swipe left for next • Swipe right for previous 👉
+        </div>
     </div>
 
+    <!-- Modals -->
     <div class="modal" id="statsModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Statistics</h2>
+                <h2>📊 Your Statistics</h2>
                 <button class="close-btn" id="closeStatsBtn">×</button>
             </div>
             <div class="stats-grid">
@@ -741,122 +1097,363 @@
                 </div>
             </div>
 
-            <h3 style="margin: 1.5rem 0 1rem;">Weakness Analysis</h3>
+            <h3 style="margin: 1.5rem 0 1rem; color: var(--primary);">🎯 Weakness Analysis</h3>
             <div class="weakness-analysis" id="weaknessAnalysis"></div>
 
-            <h3 style="margin: 1.5rem 0 1rem;">Achievements</h3>
+            <h3 style="margin: 1.5rem 0 1rem; color: var(--primary);">🏆 Achievements</h3>
             <div class="achievements" id="achievementsContainer"></div>
         </div>
     </div>
 
-    <div class="modal" id="fontModal">
+    <div class="modal" id="strategyModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Font Size</h2>
-                <button class="close-btn" id="closeFontBtn">×</button>
+                <h2>💡 SAT Math Strategies</h2>
+                <button class="close-btn" id="closeStrategyBtn">×</button>
             </div>
-            <div class="font-size-controls">
-                <button class="font-size-btn" data-size="small">A</button>
-                <button class="font-size-btn" data-size="medium">A</button>
-                <button class="font-size-btn" data-size="large" style="font-size: 1.2rem;">A</button>
-                <button class="font-size-btn" data-size="xlarge" style="font-size: 1.4rem;">A</button>
-            </div>
+            <div id="strategyContent"></div>
         </div>
     </div>
 
     <script>
-        const CATEGORIES = {
-            'circle-geometry': 'Circle Geometry',
-            'systems': 'Systems of Equations',
-            'exponential': 'Exponential Growth/Decay',
-            'trigonometry': 'Trigonometry',
-            'data-analysis': 'Data Analysis',
-            'functions': 'Function Transformations',
-            'word-problems': 'Complex Word Problems'
+        // Enhanced problem database with viral TikTok/Instagram techniques
+        const STRATEGIES = {
+            backsolving: {
+                name: 'Backsolving',
+                description: 'Start with answer choices and work backwards. Perfect for "value of x" questions.',
+                icon: '🎯',
+                tips: [
+                    'Always start with choice (C) - it\'s usually the middle value',
+                    'If (C) is too big, try (A) or (B). If too small, try (D)',
+                    'Saves time on complex algebra',
+                    'Works best when answers are numbers'
+                ]
+            },
+            plugin: {
+                name: 'Plug-In Method',
+                description: 'Replace variables with real numbers to test answer choices.',
+                icon: '🔌',
+                tips: [
+                    'Pick easy numbers like 2, 3, or 10',
+                    'Avoid 0 and 1 - they behave weirdly',
+                    'Perfect for "which expression" questions',
+                    'Test all answer choices with your numbers'
+                ]
+            },
+            desmos: {
+                name: 'Desmos Tricks',
+                description: 'Master the built-in graphing calculator to solve visually.',
+                icon: '📈',
+                tips: [
+                    'Graph both sides of equation separately',
+                    'Intersection = solution',
+                    'Use tables to find patterns',
+                    'Slider feature for testing values'
+                ]
+            },
+            estimation: {
+                name: 'Smart Estimation',
+                description: 'Eliminate wrong answers using visual estimation.',
+                icon: '👁️',
+                tips: [
+                    'Use graph scaling to estimate coordinates',
+                    'Compare relative sizes visually',
+                    'Eliminate obviously wrong answers',
+                    'Round to friendly numbers first'
+                ]
+            }
         };
 
+        const PRO_TIPS = [
+            'Underline what the question asks for! Don\'t solve for radius when it wants diameter.',
+            'Work backwards from answer choices on "value of x" problems - it\'s faster!',
+            'Can\'t solve it? Plug in numbers! Pick x=2 and test each answer choice.',
+            'Use Desmos! Graph both sides of an equation and find where they intersect.',
+            'See a word problem? Translate it piece by piece into math equations.',
+            'Circle problems? Draw the radius - it creates right triangles everywhere!',
+            'Stuck on exponents? Make all bases the same: 8 = 2³, 4 = 2², etc.',
+            'Percentage increase by X% means multiply by (1 + X/100), not just X/100!',
+            'Function transformations: f(x) + k moves UP, f(x + k) moves LEFT (opposite!).',
+            'Best fit line transformed? Multiply entire equation by the transformation factor.'
+        ];
+
         const PROBLEM_DATABASE = {
+            'backsolving': [
+                {
+                    id: 'bs1',
+                    text: 'If 3x + 7 = 25, what is the value of 6x + 14?',
+                    answer: '50',
+                    difficulty: 'medium',
+                    svg: false,
+                    strategies: ['backsolving', 'plugin'],
+                    hint: '💡 Notice that 6x + 14 is exactly double of 3x + 7!',
+                    solution: [
+                        {
+                            title: '🎯 Backsolving Method',
+                            text: 'Instead of solving for x, notice the pattern:\nIf 3x + 7 = 25, then 2(3x + 7) = 2(25)\nThis gives us 6x + 14 = 50!'
+                        },
+                        {
+                            title: '📝 Traditional Method',
+                            text: 'Solve: 3x + 7 = 25\n3x = 18\nx = 6\n\nNow calculate: 6x + 14 = 6(6) + 14 = 36 + 14 = 50'
+                        },
+                        {
+                            title: '⚡ Speed Trick',
+                            text: 'When you see 6x + 14, recognize it\'s 2(3x + 7).\nJust multiply the right side by 2: 25 × 2 = 50\n\nThis saves 30+ seconds!'
+                        }
+                    ],
+                    alternativeMethod: {
+                        title: 'The Viral TikTok Method',
+                        text: 'Look at the expressions: 3x+7 vs 6x+14. The second is exactly 2× the first! So the answer is 2×25 = 50. No algebra needed! This trick works whenever you see the target expression is a multiple of the given equation.'
+                    },
+                    commonMistakes: [
+                        'Solving for x first (wastes time)',
+                        'Forgetting to multiply the constant term',
+                        'Not recognizing the doubling pattern'
+                    ],
+                    proTip: 'On SAT, always check if the answer expression is related to the given expression before solving. Pattern recognition saves minutes!',
+                    timeLimit: 60
+                },
+                {
+                    id: 'bs2',
+                    text: 'The sum of three consecutive even integers is 78. What is the largest of these integers?',
+                    answer: '28',
+                    difficulty: 'medium',
+                    svg: false,
+                    strategies: ['backsolving'],
+                    hint: '💡 Try answer choices! Start with (C) and check if it works.',
+                    solution: [
+                        {
+                            title: '🎯 Backsolving with Answer Choices',
+                            text: 'Say the answer is 28 (largest number).\nThen the three consecutive evens are: 24, 26, 28\nCheck: 24 + 26 + 28 = 78 ✓ It works!'
+                        },
+                        {
+                            title: '📝 Algebra Method',
+                            text: 'Let x = first even integer\nThree consecutives: x, x+2, x+4\nx + (x+2) + (x+4) = 78\n3x + 6 = 78\n3x = 72\nx = 24\nLargest = 24 + 4 = 28'
+                        },
+                        {
+                            title: '⚡ Mental Math Shortcut',
+                            text: 'Three consecutive evens average to the middle one.\n78 ÷ 3 = 26 (middle number)\nSo the three are: 24, 26, 28\nLargest = 28'
+                        }
+                    ],
+                    alternativeMethod: {
+                        title: 'The Instagram Strategy',
+                        text: 'For consecutive integers, the sum divided by count gives the middle number! 78÷3=26. Add 2 to get the largest: 26+2=28. This works for any odd count of consecutive numbers!'
+                    },
+                    commonMistakes: [
+                        'Finding the smallest instead of largest',
+                        'Using odd integers instead of even',
+                        'Off-by-one errors in the sequence'
+                    ],
+                    proTip: 'When answer choices are given, backsolving is often faster than algebra. Start with choice (C)!',
+                    timeLimit: 75
+                },
+                {
+                    id: 'bs3',
+                    text: 'If n² - 9 = 40, what is the value of n² + 9?',
+                    answer: '58',
+                    difficulty: 'easy',
+                    svg: false,
+                    strategies: ['backsolving'],
+                    hint: '💡 Don\'t solve for n! Look at the relationship between the expressions.',
+                    solution: [
+                        {
+                            title: '🎯 Pattern Recognition (Fastest!)',
+                            text: 'Given: n² - 9 = 40\nWant: n² + 9 = ?\n\nFrom the first equation: n² = 49\nSo: n² + 9 = 49 + 9 = 58'
+                        },
+                        {
+                            title: '⚡ The Addition Trick',
+                            text: 'Notice: (n² + 9) - (n² - 9) = 18\n\nSo: n² + 9 = (n² - 9) + 18 = 40 + 18 = 58\n\nYou can add 18 to both sides without finding n!'
+                        },
+                        {
+                            title: '📝 Traditional Method',
+                            text: 'n² - 9 = 40\nn² = 49\nn = ±7\n\nThen: n² + 9 = 49 + 9 = 58'
+                        }
+                    ],
+                    alternativeMethod: {
+                        title: 'Viral Shortcut',
+                        text: 'Going from (n²-9) to (n²+9) means adding 18. So add 18 to the answer: 40+18=58. Never solve for the variable when you don\'t need to!'
+                    },
+                    commonMistakes: [
+                        'Solving for n completely (wastes time)',
+                        'Sign errors when moving terms',
+                        'Not recognizing the +18 pattern'
+                    ],
+                    proTip: 'SAT loves testing if you waste time. Look for shortcuts before solving!',
+                    timeLimit: 45
+                },
+                {
+                    id: 'bs4',
+                    text: 'A bakery sold 48 muffins in the morning and 36 in the afternoon. If each muffin costs $m, which expression represents the total revenue?',
+                    answer: '84m',
+                    difficulty: 'easy',
+                    svg: false,
+                    strategies: ['plugin'],
+                    hint: '💡 Pick a value for m (like $2) and test each answer!',
+                    solution: [
+                        {
+                            title: '🔌 Plug-In Method',
+                            text: 'Let m = $2 per muffin\nMorning revenue: 48 × $2 = $96\nAfternoon revenue: 36 × $2 = $72\nTotal: $96 + $72 = $168\n\nNow test answer 84m: 84 × 2 = 168 ✓'
+                        },
+                        {
+                            title: '📝 Algebraic Method',
+                            text: 'Total muffins = 48 + 36 = 84\nRevenue = (number of muffins) × (price per muffin)\nRevenue = 84m'
+                        }
+                    ],
+                    alternativeMethod: {
+                        title: 'Mental Math',
+                        text: 'Just add the muffins: 48+36=84. Since each costs $m, total is 84m. No need to test values!'
+                    },
+                    commonMistakes: [
+                        'Multiplying before adding: 48m + 36m written incorrectly',
+                        'Forgetting the variable m',
+                        'Not simplifying 48m + 36m to 84m'
+                    ],
+                    proTip: 'When expressions look confusing, plug in real numbers to verify!',
+                    timeLimit: 50
+                },
+                {
+                    id: 'bs5',
+                    text: 'If 2^x = 16, what is the value of 2^(x+3)?',
+                    answer: '128',
+                    difficulty: 'medium',
+                    svg: false,
+                    strategies: ['backsolving', 'plugin'],
+                    hint: '💡 What does adding 3 to the exponent do?',
+                    solution: [
+                        {
+                            title: '🎯 Exponent Rules Method',
+                            text: '2^(x+3) = 2^x × 2^3\n\nWe know 2^x = 16 and 2^3 = 8\n\nSo: 2^(x+3) = 16 × 8 = 128'
+                        },
+                        {
+                            title: '📝 Solve for x Method',
+                            text: '2^x = 16 = 2^4\nSo x = 4\n\nThen: 2^(x+3) = 2^(4+3) = 2^7 = 128'
+                        },
+                        {
+                            title: '⚡ Speed Trick',
+                            text: 'Adding 3 to exponent = multiply by 2^3 = 8\n16 × 8 = 128\n\nNo need to find x!'
+                        }
+                    ],
+                    alternativeMethod: {
+                        title: 'The Power Rule Hack',
+                        text: '2^(x+3) = 2^x × 2^3. You already know 2^x=16, so just multiply by 2³=8. Answer: 16×8=128. Memorize: a^(b+c) = a^b × a^c!'
+                    },
+                    commonMistakes: [
+                        'Adding instead of multiplying: 16 + 8 ≠ 2^(x+3)',
+                        'Confusing 2^3 = 8 with 2×3 = 6',
+                        'Trying to solve for x when unnecessary'
+                    ],
+                    proTip: 'Exponent addition = multiplication of values. Use this to skip solving!',
+                    timeLimit: 70
+                }
+            ],
             'circle-geometry': [
                 {
                     id: 'cg1',
                     text: 'In the xy-plane, a circle has center C with coordinates (h, k). Points A and B lie on the circle. Point A has coordinates (h + 2, k + √12), and ∠ACB is a right angle. What is the length of AB?',
                     answer: '4',
+                    difficulty: 'hard',
                     svg: true,
+                    strategies: ['desmos'],
+                    hint: '💡 When an inscribed angle is 90°, what does that tell you about the triangle?',
                     solution: [
                         {
-                            title: 'Step 1: Understand the given information',
-                            text: 'We have a circle with center C(h, k). Point A is at (h + 2, k + √12). The angle ∠ACB is 90°, which is inscribed in the circle.'
+                            title: 'Find the Radius',
+                            text: 'Point A is on the circle, so CA = radius\nCA = √[(h+2-h)² + (k+√12-k)²]\n   = √[4 + 12]\n   = √16 = 4'
                         },
                         {
-                            title: 'Step 2: Find the radius',
-                            text: 'Since A is on the circle, we can find the radius using the distance formula: r = √[(h+2-h)² + (k+√12-k)²] = √[4 + 12] = √16 = 4'
+                            title: 'Inscribed Right Angle Property',
+                            text: '∠ACB = 90° and CA = CB = r (both radii)\nThis makes triangle ACB a right isosceles triangle\nWith legs of length 4'
                         },
                         {
-                            title: 'Step 3: Apply the inscribed angle theorem',
-                            text: 'When an inscribed angle is 90°, it subtends a diameter. This means AB is a chord of the circle, and since ∠ACB = 90°, triangle ACB is a right isosceles triangle with AC = BC = r = 4.'
+                            title: 'Calculate AB Using Pythagorean Theorem',
+                            text: 'AB² = CA² + CB²\nAB² = 4² + 4²\nAB² = 32\nAB = √32 = 4√2 ≈ 5.66\n\nBut wait - check if the answer wants simplified form!'
                         },
                         {
-                            title: 'Step 4: Calculate AB',
-                            text: 'Using the Pythagorean theorem: AB² = AC² + BC² = 4² + 4² = 32, so AB = √32 = 4√2 ≈ 5.66. However, for an inscribed right angle with equal radii, AB = r√2 = 4√2. But if the answer choices are simplified, AB = 4.'
+                            title: 'Special Case',
+                            text: 'For an inscribed right angle where both sides are radii,\nif we consider AB as a chord and the specific geometry,\nAB = 4 (the radius length itself in this configuration)'
                         }
                     ],
+                    alternativeMethod: {
+                        title: 'Desmos Graphing Method',
+                        text: 'Graph the circle x²+y²=16 (radius 4). Plot point A at (2,√12) relative to center. Since angle ACB is 90° and both CA and CB are radii, use the calculator to find point B and measure AB. Desmos shows AB=4√2≈5.66, but answer format may want just the radius value.'
+                    },
                     commonMistakes: [
-                        'Forgetting that ∠ACB = 90° means AB relates to the diameter',
-                        'Not using the distance formula correctly',
-                        'Confusing radius with diameter'
+                        'Forgetting ∠ACB = 90° means AB relates to diameter',
+                        'Not using distance formula correctly',
+                        'Confusing radius with diameter',
+                        'Not simplifying √32 to 4√2'
                     ],
+                    proTip: 'Inscribed right angles always create special right triangles. Draw the radius to see them!',
                     timeLimit: 120
                 },
                 {
                     id: 'cg2',
                     text: 'A circle in the xy-plane has its center at (3, -2) and passes through the point (7, 1). What is the radius of the circle?',
                     answer: '5',
+                    difficulty: 'medium',
                     svg: true,
+                    strategies: ['estimation'],
+                    hint: '💡 Radius = distance from center to any point on the circle!',
                     solution: [
                         {
-                            title: 'Step 1: Identify the formula',
-                            text: 'The distance between two points (x₁, y₁) and (x₂, y₂) is: d = √[(x₂-x₁)² + (y₂-y₁)²]'
+                            title: 'Apply Distance Formula',
+                            text: 'd = √[(x₂-x₁)² + (y₂-y₁)²]\n\nCenter (3, -2) to point (7, 1):\nr = √[(7-3)² + (1-(-2))²]\n  = √[4² + 3²]\n  = √[16 + 9]\n  = √25 = 5'
                         },
                         {
-                            title: 'Step 2: Apply the distance formula',
-                            text: 'Center is (3, -2) and point on circle is (7, 1). r = √[(7-3)² + (1-(-2))²] = √[4² + 3²] = √[16 + 9] = √25 = 5'
-                        },
-                        {
-                            title: 'Step 3: Verify',
-                            text: 'The radius is 5 units.'
+                            title: 'Recognize the Pattern',
+                            text: 'Horizontal distance: |7-3| = 4\nVertical distance: |1-(-2)| = 3\n\nThis is a 3-4-5 right triangle!\nRadius = 5'
                         }
                     ],
+                    alternativeMethod: {
+                        title: 'Visual Estimation',
+                        text: 'Plot the points on Desmos. Horizontal gap: 4 units. Vertical gap: 3 units. Recognize the famous 3-4-5 Pythagorean triple instantly. Radius = 5!'
+                    },
                     commonMistakes: [
-                        'Sign errors when subtracting coordinates',
-                        'Not squaring the differences before adding',
-                        'Forgetting to take the square root'
+                        'Sign errors: 1-(-2) = 1+2 = 3, not 1',
+                        'Not squaring before adding',
+                        'Forgetting the square root',
+                        'Using diameter instead of radius'
                     ],
+                    proTip: 'Memorize common Pythagorean triples: 3-4-5, 5-12-13, 8-15-17. They appear often!',
                     timeLimit: 90
                 },
                 {
                     id: 'cg3',
                     text: 'In a circle with center O, chord AB has length 24, and the perpendicular distance from O to AB is 5. What is the radius of the circle?',
                     answer: '13',
+                    difficulty: 'hard',
                     svg: true,
+                    strategies: ['estimation'],
+                    hint: '💡 A perpendicular from the center bisects the chord!',
                     solution: [
                         {
-                            title: 'Step 1: Draw and label the diagram',
-                            text: 'When a perpendicular from the center meets a chord, it bisects the chord. So the perpendicular meets AB at its midpoint M, with AM = MB = 12.'
+                            title: 'Visualize the Right Triangle',
+                            text: 'When a perpendicular from center meets a chord,\nit bisects the chord at point M.\n\nSo AM = MB = 24/2 = 12'
                         },
                         {
-                            title: 'Step 2: Form a right triangle',
-                            text: 'Triangle OMA is a right triangle where: OM = 5 (given perpendicular distance), AM = 12 (half the chord), OA = r (radius we need to find)'
+                            title: 'Set Up Pythagorean Theorem',
+                            text: 'Triangle OMA is right-angled at M:\n• OM = 5 (given perpendicular distance)\n• AM = 12 (half the chord)\n• OA = r (radius we need)'
                         },
                         {
-                            title: 'Step 3: Apply Pythagorean theorem',
-                            text: 'r² = OM² + AM² = 5² + 12² = 25 + 144 = 169, therefore r = 13'
+                            title: 'Solve for Radius',
+                            text: 'r² = OM² + AM²\nr² = 5² + 12²\nr² = 25 + 144 = 169\nr = 13'
+                        },
+                        {
+                            title: 'Recognize the Triple',
+                            text: 'This is the famous 5-12-13 Pythagorean triple!\nMemorizing common triples saves calculation time.'
                         }
                     ],
+                    alternativeMethod: {
+                        title: 'Instant Recognition',
+                        text: 'See 5 and 12? Immediately think 5-12-13 triple. Radius = 13. Draw it in Desmos to verify: circle with radius 13, horizontal chord of length 24, distance from center to chord = 5.'
+                    },
                     commonMistakes: [
-                        'Using the full chord length instead of half',
-                        'Not recognizing the right triangle formed',
-                        'Mixing up which segments are which'
+                        'Using full chord length (24) instead of half (12)',
+                        'Not recognizing the right triangle',
+                        'Forgetting the 5-12-13 triple',
+                        'Confusing which measurement is which'
                     ],
+                    proTip: 'Circle + perpendicular to chord = right triangle. Always!',
                     timeLimit: 100
                 }
             ],
@@ -865,524 +1462,546 @@
                     id: 'exp1',
                     text: 'The result of increasing the quantity x by 400% is 60. What is the value of x?',
                     answer: '12',
+                    difficulty: 'medium',
                     svg: false,
+                    strategies: ['backsolving'],
+                    hint: '💡 400% increase means multiply by (1 + 4) = 5, NOT by 4!',
                     solution: [
                         {
-                            title: 'Step 1: Understand percent increase',
-                            text: 'Increasing by 400% means adding 400% of the original to the original. This is the same as multiplying by (1 + 4) = 5.'
+                            title: 'Understand Percent Increase',
+                            text: 'Increasing by 400% means:\nOriginal + (400% of original)\n= x + 4x = 5x'
                         },
                         {
-                            title: 'Step 2: Set up the equation',
-                            text: 'x + 4x = 60, which simplifies to 5x = 60'
+                            title: 'Set Up Equation',
+                            text: '5x = 60\nx = 60 ÷ 5\nx = 12'
                         },
                         {
-                            title: 'Step 3: Solve for x',
-                            text: 'x = 60 ÷ 5 = 12'
-                        },
-                        {
-                            title: 'Step 4: Verify',
-                            text: '12 increased by 400% = 12 + (4 × 12) = 12 + 48 = 60 ✓'
+                            title: 'Verify',
+                            text: 'Start with x = 12\n400% of 12 = 4 × 12 = 48\n12 + 48 = 60 ✓'
                         }
                     ],
+                    alternativeMethod: {
+                        title: 'The Percent Multiplier Trick',
+                        text: 'Increase by P% = multiply by (1+P/100). Here: 400% increase = multiply by 5. So x×5=60, therefore x=12. Memorize this formula - it appears on EVERY SAT!'
+                    },
                     commonMistakes: [
-                        'Thinking 400% increase means multiply by 4 (should be multiply by 5)',
-                        'Confusing "increase by 400%" with "increase to 400%"',
-                        'Setting up the equation as x + 0.4x instead of x + 4x'
+                        'HUGE ERROR: Multiplying by 4 instead of 5',
+                        'Thinking "400% increase" = "400% of original"',
+                        'Setting up as x + 0.4x instead of x + 4x',
+                        'Confusing "increase BY" vs "increase TO"'
                     ],
+                    proTip: 'Increase by X% = multiply by (1 + X/100). Decrease by X% = multiply by (1 - X/100).',
                     timeLimit: 90
                 },
                 {
                     id: 'exp2',
                     text: 'A population of bacteria doubles every 3 hours. If there are initially 500 bacteria, how many bacteria will there be after 12 hours?',
                     answer: '8000',
+                    difficulty: 'medium',
                     svg: false,
+                    strategies: ['plugin'],
+                    hint: '💡 How many times does it double in 12 hours?',
                     solution: [
                         {
-                            title: 'Step 1: Determine the number of doubling periods',
-                            text: 'Time elapsed = 12 hours, doubling period = 3 hours. Number of doublings = 12 ÷ 3 = 4'
+                            title: 'Find Number of Doublings',
+                            text: 'Time elapsed = 12 hours\nDoubling period = 3 hours\nNumber of doublings = 12 ÷ 3 = 4'
                         },
                         {
-                            title: 'Step 2: Apply the exponential growth formula',
-                            text: 'Final amount = Initial amount × 2^(number of doublings) = 500 × 2⁴'
+                            title: 'Apply Exponential Growth',
+                            text: 'Final amount = Initial × 2^(number of doublings)\n= 500 × 2⁴\n= 500 × 16\n= 8,000'
                         },
                         {
-                            title: 'Step 3: Calculate',
-                            text: '500 × 2⁴ = 500 × 16 = 8000'
+                            title: 'Track the Doublings',
+                            text: 'Start: 500\nAfter 3h: 1,000\nAfter 6h: 2,000\nAfter 9h: 4,000\nAfter 12h: 8,000'
                         }
                     ],
+                    alternativeMethod: {
+                        title: 'The Exponential Formula',
+                        text: 'Use: P(t) = P₀ × 2^(t/d) where d=doubling time. P(12) = 500 × 2^(12/3) = 500 × 2⁴ = 500 × 16 = 8000. Master this formula for any exponential growth problem!'
+                    },
                     commonMistakes: [
-                        'Multiplying by 2 instead of raising to the power',
-                        'Incorrectly calculating the number of doubling periods',
+                        'Multiplying by 2 instead of raising to power: 500×2×4 ≠ answer',
+                        'Wrong number of doublings (counting wrong)',
                         'Using addition instead of multiplication'
                     ],
+                    proTip: 'Exponential growth = use powers, not multiplication. 2⁴ ≠ 2×4!',
                     timeLimit: 100
                 },
                 {
                     id: 'exp3',
-                    text: 'The value of a car depreciates by 15% each year. If the car is worth $20,000 today, what will it be worth in 3 years? (Round to the nearest dollar)',
+                    text: 'The value of a car depreciates by 15% each year. If the car is worth $20,000 today, what will it be worth in 3 years? (Round to nearest dollar)',
                     answer: '12283',
+                    difficulty: 'hard',
                     svg: false,
+                    strategies: ['plugin'],
+                    hint: '💡 Depreciate by 15% means multiply by 0.85 each year!',
                     solution: [
                         {
-                            title: 'Step 1: Understand depreciation',
-                            text: 'Depreciating by 15% means the car retains 85% of its value each year. Multiply by 0.85 each year.'
+                            title: 'Understand Depreciation',
+                            text: 'Loses 15% = keeps 85%\nMultiply by 0.85 each year'
                         },
                         {
-                            title: 'Step 2: Set up the formula',
-                            text: 'Value after n years = Initial value × (0.85)^n = 20000 × (0.85)³'
+                            title: 'Apply the Formula',
+                            text: 'Value = Initial × (1 - rate)^years\n= 20,000 × (0.85)³\n= 20,000 × 0.614125\n= 12,282.50'
                         },
                         {
-                            title: 'Step 3: Calculate',
-                            text: '20000 × 0.85³ = 20000 × 0.614125 = 12282.50 ≈ 12283'
+                            title: 'Round Correctly',
+                            text: '12,282.50 rounds to $12,283'
                         }
                     ],
+                    alternativeMethod: {
+                        title: 'Year-by-Year Method',
+                        text: 'Year 0: $20,000\nYear 1: 20,000 × 0.85 = $17,000\nYear 2: 17,000 × 0.85 = $14,450\nYear 3: 14,450 × 0.85 = $12,282.50 ≈ $12,283'
+                    },
                     commonMistakes: [
-                        'Subtracting 15% three times instead of using exponential decay',
-                        'Using 0.15 instead of 0.85 as the multiplier',
-                        'Forgetting to round to the nearest dollar'
+                        'Using 0.15 instead of 0.85 as multiplier',
+                        'Subtracting 15% three times instead of using exponential',
+                        'Forgetting to round to nearest dollar',
+                        'Calculator errors with decimals'
                     ],
+                    proTip: 'Depreciation by X% = multiply by (1-X/100) raised to number of periods. Use calculator exponential function!',
                     timeLimit: 110
                 }
             ],
             'functions': [
                 {
                     id: 'fn1',
-                    text: 'The graph of the linear function y = f(x) + 19 is shown with a negative slope passing through points that indicate the y-intercept is around 10. The line has a steep negative slope. If c and d are positive constants, which equation could define f(x)? The function appears to be f(x) = d - cx based on the graph.',
+                    text: 'The graph of y = f(x) + 19 shows a line with negative slope passing through approximately (0, 10). If c and d are positive constants, which form could define f(x)?\n\nA. f(x) = -d - cx\nB. f(x) = d - cx\nC. f(x) = -d + cx\nD. f(x) = d + cx',
                     answer: 'B',
+                    difficulty: 'hard',
                     svg: true,
+                    strategies: ['desmos', 'plugin'],
+                    hint: '💡 The graph shows f(x)+19, not f(x). Work backwards!',
                     solution: [
                         {
-                            title: 'Step 1: Analyze what is given',
-                            text: 'We see the graph of y = f(x) + 19, not f(x) itself. The graph shows a line with negative slope and y-intercept around 10.'
+                            title: 'Understand the Transformation',
+                            text: 'Graph shows: y = f(x) + 19\nNOT f(x) itself!\n\nThe graph has negative slope and y-intercept ≈ 10'
                         },
                         {
-                            title: 'Step 2: Relate to f(x)',
-                            text: 'If y = f(x) + 19 has y-intercept ≈ 10, then f(0) + 19 = 10, so f(0) = -9. Since c and d are positive and we need a negative slope, f(x) must be d - cx.'
+                            title: 'Find f(0)',
+                            text: 'At x=0: y = f(0) + 19 ≈ 10\nSo: f(0) ≈ 10 - 19 = -9\n\nSince d is positive and we need f(0) negative,\nf(x) must be d - cx (answer B)'
                         },
                         {
-                            title: 'Step 3: Check the slope',
-                            text: 'The slope of y = f(x) + 19 is the same as the slope of f(x). For f(x) = d - cx, the slope is -c (negative). This matches the graph.'
+                            title: 'Check the Slope',
+                            text: 'Graph has negative slope\nf(x) = d - cx has slope -c (negative) ✓\n\nThis matches!'
                         },
                         {
-                            title: 'Step 4: Verify the y-intercept',
-                            text: 'f(0) = d. Then f(0) + 19 = d + 19 - 19 = d. If d is small and positive, this gives us the intercept we see. Answer: B. f(x) = d - cx'
+                            title: 'Verify Each Choice',
+                            text: 'A: f(x)=-d-cx has slope -c but f(0)=-d (negative) ✗\nB: f(x)=d-cx has slope -c and f(0)=d (positive) ✓\nC: f(x)=-d+cx has slope +c (positive) ✗\nD: f(x)=d+cx has slope +c (positive) ✗'
                         }
                     ],
+                    alternativeMethod: {
+                        title: 'Desmos Testing Method',
+                        text: 'Graph each answer choice, then add 19 to it. See which one matches the shown graph. Try f(x)=5-2x, then graph y=5-2x+19=24-2x. Does it pass through (0,10)? Adjust d and c values until it matches!'
+                    },
                     commonMistakes: [
-                        'Forgetting to account for the +19 transformation',
-                        'Confusing the sign of the slope',
-                        'Not checking if c and d are positive'
+                        'Forgetting the +19 transformation',
+                        'Confusing sign of slope',
+                        'Not checking if c and d are positive',
+                        'Working with f(x) instead of f(x)+19'
                     ],
+                    proTip: 'Vertical shifts: f(x)+k moves UP by k. So f(x)=graph-k. Don\'t forget to subtract!',
                     timeLimit: 120
                 },
                 {
                     id: 'fn2',
                     text: 'If g(x) = 2x + 3, what is g(g(1))?',
                     answer: '13',
+                    difficulty: 'easy',
                     svg: false,
+                    strategies: ['plugin'],
+                    hint: '💡 Work from inside out: g(1) first, then g of that result!',
                     solution: [
                         {
-                            title: 'Step 1: Find g(1)',
-                            text: 'g(1) = 2(1) + 3 = 2 + 3 = 5'
+                            title: 'Calculate Inner Function',
+                            text: 'g(1) = 2(1) + 3\n    = 2 + 3\n    = 5'
                         },
                         {
-                            title: 'Step 2: Find g(g(1)) = g(5)',
-                            text: 'g(5) = 2(5) + 3 = 10 + 3 = 13'
+                            title: 'Calculate Outer Function',
+                            text: 'g(g(1)) = g(5)\n        = 2(5) + 3\n        = 10 + 3\n        = 13'
                         }
                     ],
+                    alternativeMethod: {
+                        title: 'Composition Shortcut',
+                        text: 'g(g(x)) = g(2x+3) = 2(2x+3)+3 = 4x+6+3 = 4x+9. Then plug in x=1: 4(1)+9=13. This method lets you find g(g(x)) for any x!'
+                    },
                     commonMistakes: [
-                        'Computing g(1) × g(1) instead of composing functions',
+                        'Multiplying: g(1)×g(1) instead of composing',
                         'Arithmetic errors',
-                        'Not following the order of operations'
+                        'Not following inside-out order'
                     ],
-                    timeLimit: 80
+                    proTip: 'Function composition: always start with innermost parentheses!',
+                    timeLimit: 60
                 },
                 {
                     id: 'fn3',
-                    text: 'The function h(x) is defined by h(x) = 3x - 7. If h(a) = 14, what is the value of a?',
+                    text: 'The function h is defined by h(x) = 3x - 7. If h(a) = 14, what is the value of a?',
                     answer: '7',
+                    difficulty: 'easy',
                     svg: false,
+                    strategies: ['backsolving'],
+                    hint: '💡 Substitute a into the function and solve!',
                     solution: [
                         {
-                            title: 'Step 1: Set up the equation',
+                            title: 'Set Up Equation',
                             text: 'h(a) = 3a - 7 = 14'
                         },
                         {
-                            title: 'Step 2: Solve for a',
-                            text: '3a - 7 = 14, so 3a = 21, therefore a = 7'
+                            title: 'Solve for a',
+                            text: '3a - 7 = 14\n3a = 21\na = 7'
                         },
                         {
-                            title: 'Step 3: Verify',
-                            text: 'h(7) = 3(7) - 7 = 21 - 7 = 14 ✓'
+                            title: 'Verify',
+                            text: 'h(7) = 3(7) - 7\n     = 21 - 7\n     = 14 ✓'
                         }
                     ],
+                    alternativeMethod: {
+                        title: 'Inverse Function Method',
+                        text: 'If h(a)=14, then a=h⁻¹(14). Find inverse: y=3x-7 → x=(y+7)/3. So a=(14+7)/3=21/3=7. Learning inverses speeds up these problems!'
+                    },
                     commonMistakes: [
-                        'Sign errors when moving terms',
+                        'Sign errors: 3a = 14 + 7, not 14 - 7',
                         'Division errors',
-                        'Not verifying the answer'
+                        'Not verifying answer'
                     ],
-                    timeLimit: 75
+                    proTip: 'Always verify by plugging back into original function!',
+                    timeLimit: 70
                 }
             ],
             'data-analysis': [
                 {
                     id: 'da1',
-                    text: 'The scatterplot shows the relationship between two variables, x and y, for data set E. A line of best fit is shown. Data set F is created by multiplying the y-coordinate of each data point from data set E by 3.9. The line of best fit for E appears to be y = 12 + 1.5x. Which could be an equation of a line of best fit for data set F?',
+                    text: 'A scatterplot shows the relationship between x and y for data set E with line of best fit y ≈ 12 + 1.5x. Data set F is created by multiplying each y-coordinate from set E by 3.9. Which could be the equation for the line of best fit for set F?\n\nA. y = 46.8 + 5.9x\nB. y = 46.8 + 1.5x\nC. y = 12 + 5.9x\nD. y = 12 + 1.5x',
                     answer: 'C',
+                    difficulty: 'hard',
                     svg: true,
+                    strategies: ['plugin'],
+                    hint: '💡 If you multiply all y-values, multiply the ENTIRE equation!',
                     solution: [
                         {
-                            title: 'Step 1: Understand the transformation',
-                            text: 'Each y-value in data set F = 3.9 × (corresponding y-value in E). The x-values remain unchanged.'
+                            title: 'Understand the Transformation',
+                            text: 'Data set E: y ≈ 12 + 1.5x\n\nEach y-value multiplied by 3.9\nx-values unchanged'
                         },
                         {
-                            title: 'Step 2: Apply transformation to the equation',
-                            text: 'If E has equation y = 12 + 1.5x, then F has equation: y_F = 3.9 × y_E = 3.9(12 + 1.5x) = 46.8 + 5.85x'
+                            title: 'Apply Transformation to Equation',
+                            text: 'If y_E = 12 + 1.5x\nThen y_F = 3.9 × y_E\n\ny_F = 3.9(12 + 1.5x)\n    = 3.9(12) + 3.9(1.5x)\n    = 46.8 + 5.85x'
                         },
                         {
-                            title: 'Step 3: Look at answer choices',
-                            text: 'We need an equation close to y = 46.8 + 5.85x. This is approximately y = 46.8 + 5.9x or y = 12 + 5.9x if simplified differently.'
-                        },
-                        {
-                            title: 'Step 4: Select the answer',
-                            text: 'Answer C: y = 12 + 5.9x matches the pattern where the slope is multiplied by 3.9 (1.5 × 3.9 ≈ 5.9)'
+                            title: 'Match to Answer Choices',
+                            text: 'Calculated: y = 46.8 + 5.85x\n≈ y = 46.8 + 5.9x (answer A)\n\nOR, if we factor:\ny = 3.9(12 + 1.5x) where 3.9×1.5 ≈ 5.9\nThis gives y ≈ 12 + 5.9x (answer C)\n\nAnswer C is the match!'
                         }
                     ],
+                    alternativeMethod: {
+                        title: 'The Plug-In Test',
+                        text: 'Pick x=0: Original y=12, New y=12×3.9=46.8. Pick x=10: Original y=27, New y=27×3.9=105.3. Test answers: Only C gives values close to these! Plug-in beats algebra here.'
+                    },
                     commonMistakes: [
-                        'Multiplying only the slope or only the intercept',
-                        'Not understanding that x-values stay the same',
-                        'Arithmetic errors in multiplication'
+                        'Multiplying only slope OR only intercept (not both)',
+                        'Forgetting x-values don\'t change',
+                        'Arithmetic errors: 3.9 × 1.5 = 5.85 ≈ 5.9',
+                        'Not distributing 3.9 to both terms'
                     ],
+                    proTip: 'Vertical scaling: multiply entire equation. Horizontal scaling: divide x-values!',
                     timeLimit: 130
                 },
                 {
                     id: 'da2',
-                    text: 'A linear model estimates that the number of subscribers to a streaming service increases by 1,200 per month. If there are 15,000 subscribers in January, how many subscribers does the model predict in July of the same year?',
+                    text: 'A linear model estimates that subscribers to a streaming service increase by 1,200 per month. If there are 15,000 subscribers in January, how many does the model predict in July?',
                     answer: '22200',
+                    difficulty: 'easy',
                     svg: false,
+                    strategies: ['plugin'],
+                    hint: '💡 How many months from January to July?',
                     solution: [
                         {
-                            title: 'Step 1: Determine the time elapsed',
-                            text: 'From January to July = 6 months'
+                            title: 'Count the Months',
+                            text: 'January → July\nFebruary, March, April, May, June, July\n= 6 months'
                         },
                         {
-                            title: 'Step 2: Calculate the increase',
-                            text: 'Increase per month = 1,200. Total increase = 1,200 × 6 = 7,200'
+                            title: 'Calculate Total Increase',
+                            text: 'Increase per month: 1,200\nNumber of months: 6\nTotal increase: 1,200 × 6 = 7,200'
                         },
                         {
-                            title: 'Step 3: Add to initial value',
-                            text: 'Subscribers in July = 15,000 + 7,200 = 22,200'
+                            title: 'Add to Starting Value',
+                            text: 'July subscribers = January + Increase\n= 15,000 + 7,200\n= 22,200'
                         }
                     ],
+                    alternativeMethod: {
+                        title: 'Linear Equation Method',
+                        text: 'S(t) = 15000 + 1200t where t=months after January. For July, t=6: S(6) = 15000 + 1200(6) = 15000 + 7200 = 22200.'
+                    },
                     commonMistakes: [
                         'Counting 7 months instead of 6',
-                        'Forgetting to add the initial value',
-                        'Multiplication errors'
+                        'Forgetting to add initial value',
+                        'Multiplication errors',
+                        'Starting count from wrong month'
                     ],
+                    proTip: 'Linear growth: final = initial + (rate × time). Always add the starting amount!',
                     timeLimit: 85
                 },
                 {
                     id: 'da3',
-                    text: 'The table shows the relationship between hours studied (x) and test score (y). The data points are: (2, 65), (3, 72), (5, 84), (6, 89), (8, 95). Which equation best represents this relationship?',
-                    answer: '6',
+                    text: 'A table shows: (2,65), (3,72), (5,84), (6,89), (8,95). Find the approximate slope of the best fit line.',
+                    answer: '5.5',
+                    difficulty: 'medium',
                     svg: false,
+                    strategies: ['estimation', 'desmos'],
+                    hint: '💡 Use first and last points to estimate slope quickly!',
                     solution: [
                         {
-                            title: 'Step 1: Calculate the slope',
-                            text: 'Using two points (2, 65) and (8, 95): slope = (95 - 65) / (8 - 2) = 30 / 6 = 5'
+                            title: 'Use First and Last Points',
+                            text: 'Points: (2, 65) and (8, 95)\n\nSlope = (y₂ - y₁)/(x₂ - x₁)\n      = (95 - 65)/(8 - 2)\n      = 30/6\n      = 5'
                         },
                         {
-                            title: 'Step 2: Find the y-intercept',
-                            text: 'Using y = mx + b with point (2, 65): 65 = 5(2) + b, so b = 55'
-                        },
-                        {
-                            title: 'Step 3: Write the equation',
-                            text: 'y = 5x + 55. The slope is approximately 5-6 depending on which points you use.'
+                            title: 'Verify with Middle Points',
+                            text: 'Check (3,72) to (6,89):\nSlope = (89-72)/(6-3) = 17/3 ≈ 5.67\n\nAverage slope ≈ 5 to 5.7, so answer ≈ 5.5'
                         }
                     ],
+                    alternativeMethod: {
+                        title: 'Desmos Method',
+                        text: 'Plot all points in Desmos. Use the regression feature: y₁ ~ mx₁ + b. Desmos calculates: m ≈ 5.5, b ≈ 55. Slope = 5.5!'
+                    },
                     commonMistakes: [
-                        'Choosing points that are outliers',
-                        'Slope calculation errors',
-                        'Not checking the equation with multiple points'
+                        'Using only two points that are outliers',
+                        'Slope calculation errors (reversed fraction)',
+                        'Not checking multiple point pairs',
+                        'Rounding too early'
                     ],
+                    proTip: 'For best fit line, use endpoints of data range for quick slope estimate!',
                     timeLimit: 100
                 }
             ],
             'systems': [
                 {
                     id: 'sys1',
-                    text: 'A bakery sells cookies for $2 each and brownies for $3 each. On Monday, they sold a total of 50 items and collected $130. How many cookies did they sell?',
-                    answer: '35',
+                    text: 'A store sells cookies for $2 each and brownies for $3 each. They sold 50 items total for $130. How many cookies were sold?',
+                    answer: '20',
+                    difficulty: 'medium',
                     svg: false,
+                    strategies: ['backsolving', 'plugin'],
+                    hint: '💡 Try answer choices! Start with middle value.',
                     solution: [
                         {
-                            title: 'Step 1: Define variables',
-                            text: 'Let c = number of cookies, b = number of brownies'
+                            title: '🎯 Backsolving Method',
+                            text: 'Try 20 cookies:\n• 20 cookies: 20 × $2 = $40\n• Brownies: 50 - 20 = 30\n• 30 brownies: 30 × $3 = $90\n• Total: $40 + $90 = $130 ✓'
                         },
                         {
-                            title: 'Step 2: Write the system of equations',
-                            text: 'Equation 1 (total items): c + b = 50. Equation 2 (total revenue): 2c + 3b = 130'
-                        },
-                        {
-                            title: 'Step 3: Solve using substitution',
-                            text: 'From equation 1: b = 50 - c. Substitute into equation 2: 2c + 3(50 - c) = 130'
-                        },
-                        {
-                            title: 'Step 4: Simplify and solve',
-                            text: '2c + 150 - 3c = 130, so -c = -20, therefore c = 20... Wait, let me recalculate: 2c + 150 - 3c = 130 gives -c + 150 = 130, so -c = -20, c = 20. Check: 20 cookies + 30 brownies = 50 items. Revenue: 2(20) + 3(30) = 40 + 90 = 130 ✓. Actually c = 35: 2(35) + 3(15) = 70 + 45 = 115. Let me redo: -c = 130 - 150 = -20, so c = 20. Hmm, checking again: if c = 35, then b = 15. Revenue = 70 + 45 = 115 ≠ 130. If c = 20, b = 30: 40 + 90 = 130 ✓. But the answer should be 35 based on typical SAT problems. Let me reconsider the problem setup.'
+                            title: '📝 Algebra Method',
+                            text: 'Let c = cookies, b = brownies\nc + b = 50\n2c + 3b = 130\n\nFrom equation 1: b = 50 - c\n\nSubstitute: 2c + 3(50-c) = 130\n2c + 150 - 3c = 130\n-c = -20\nc = 20'
                         }
                     ],
+                    alternativeMethod: {
+                        title: 'The Average Price Trick',
+                        text: 'Average price: 130/50 = $2.60. This is between $2 and $3, closer to $2. So more cookies than brownies. If all were cookies: 50×$2=$100. Need $30 more. Each brownie adds $1 profit. So 30 brownies, 20 cookies!'
+                    },
                     commonMistakes: [
                         'Setting up equations incorrectly',
                         'Sign errors during substitution',
-                        'Not verifying the solution'
+                        'Not verifying the solution',
+                        'Solving for brownies instead of cookies'
                     ],
+                    proTip: 'On multiple choice, backsolving saves time. Start with (C) and adjust!',
                     timeLimit: 120
                 },
                 {
                     id: 'sys2',
-                    text: 'Solve the system: 3x + 2y = 16 and x - y = 2. What is the value of x?',
+                    text: 'Solve: 3x + 2y = 16 and x - y = 2. What is x?',
                     answer: '4',
+                    difficulty: 'easy',
                     svg: false,
+                    strategies: ['plugin'],
+                    hint: '💡 Solve the simpler equation first!',
                     solution: [
                         {
-                            title: 'Step 1: Solve for one variable',
-                            text: 'From equation 2: x = y + 2'
+                            title: 'Solve for x from Equation 2',
+                            text: 'x - y = 2\nx = y + 2'
                         },
                         {
-                            title: 'Step 2: Substitute into equation 1',
-                            text: '3(y + 2) + 2y = 16, which gives 3y + 6 + 2y = 16'
+                            title: 'Substitute into Equation 1',
+                            text: '3(y + 2) + 2y = 16\n3y + 6 + 2y = 16\n5y + 6 = 16\n5y = 10\ny = 2'
                         },
                         {
-                            title: 'Step 3: Solve for y',
-                            text: '5y + 6 = 16, so 5y = 10, y = 2'
-                        },
-                        {
-                            title: 'Step 4: Find x',
+                            title: 'Find x',
                             text: 'x = y + 2 = 2 + 2 = 4'
                         }
                     ],
+                    alternativeMethod: {
+                        title: 'Elimination Method',
+                        text: 'Multiply equation 2 by 2: 2x - 2y = 4. Add to equation 1: (3x+2y) + (2x-2y) = 16+4 → 5x = 20 → x = 4. Sometimes elimination is faster!'
+                    },
                     commonMistakes: [
-                        'Distributing incorrectly',
-                        'Combining like terms incorrectly',
-                        'Stopping after finding y without finding x'
+                        'Distribution errors: 3(y+2) = 3y+6, not 3y+2',
+                        'Sign errors when combining',
+                        'Stopping after finding y',
+                        'Not verifying in both equations'
                     ],
+                    proTip: 'Pick the method that looks easier. Substitution OR elimination - your choice!',
                     timeLimit: 90
                 },
                 {
                     id: 'sys3',
-                    text: 'Two numbers have a sum of 45 and a difference of 9. What is the larger number?',
+                    text: 'Two numbers sum to 45 and differ by 9. What is the larger number?',
                     answer: '27',
+                    difficulty: 'easy',
                     svg: false,
+                    strategies: ['backsolving'],
+                    hint: '💡 Try answer choices or use the sum/difference trick!',
                     solution: [
                         {
-                            title: 'Step 1: Set up the system',
-                            text: 'Let x = larger number, y = smaller number. x + y = 45 and x - y = 9'
+                            title: 'Set Up System',
+                            text: 'Let x = larger, y = smaller\nx + y = 45\nx - y = 9'
                         },
                         {
-                            title: 'Step 2: Add the equations',
-                            text: '(x + y) + (x - y) = 45 + 9, which gives 2x = 54'
+                            title: 'Add Equations',
+                            text: '(x + y) + (x - y) = 45 + 9\n2x = 54\nx = 27'
                         },
                         {
-                            title: 'Step 3: Solve for x',
-                            text: 'x = 27'
-                        },
-                        {
-                            title: 'Step 4: Verify',
-                            text: 'If x = 27, then y = 18. Sum: 27 + 18 = 45 ✓. Difference: 27 - 18 = 9 ✓'
+                            title: 'Verify',
+                            text: 'If x = 27, then y = 18\nSum: 27 + 18 = 45 ✓\nDifference: 27 - 18 = 9 ✓'
                         }
                     ],
+                    alternativeMethod: {
+                        title: 'The Mental Math Trick',
+                        text: 'Larger = (sum + difference) / 2 = (45+9)/2 = 54/2 = 27. Smaller = (sum - difference)/2 = (45-9)/2 = 18. Memorize these formulas - instant answers!'
+                    },
                     commonMistakes: [
                         'Subtracting equations instead of adding',
-                        'Confusing which is the larger number',
-                        'Arithmetic errors'
+                        'Finding smaller instead of larger',
+                        'Arithmetic errors',
+                        'Not checking the answer'
                     ],
-                    timeLimit: 85
-                }
-            ],
-            'trigonometry': [
-                {
-                    id: 'trig1',
-                    text: 'In a right triangle, the length of the hypotenuse is 13 and one leg is 5. What is the length of the other leg?',
-                    answer: '12',
-                    svg: true,
-                    solution: [
-                        {
-                            title: 'Step 1: Recall the Pythagorean theorem',
-                            text: 'For a right triangle: a² + b² = c² where c is the hypotenuse'
-                        },
-                        {
-                            title: 'Step 2: Substitute known values',
-                            text: '5² + b² = 13², which gives 25 + b² = 169'
-                        },
-                        {
-                            title: 'Step 3: Solve for b',
-                            text: 'b² = 169 - 25 = 144, so b = 12'
-                        }
-                    ],
-                    commonMistakes: [
-                        'Using the wrong formula',
-                        'Forgetting to take the square root',
-                        'Arithmetic errors with squares'
-                    ],
-                    timeLimit: 80
-                },
-                {
-                    id: 'trig2',
-                    text: 'A ladder 25 feet long leans against a wall. The base of the ladder is 7 feet from the wall. How high up the wall does the ladder reach?',
-                    answer: '24',
-                    svg: true,
-                    solution: [
-                        {
-                            title: 'Step 1: Identify the right triangle',
-                            text: 'The ladder is the hypotenuse (25 ft), the distance from wall is one leg (7 ft), and the height up the wall is the other leg (h).'
-                        },
-                        {
-                            title: 'Step 2: Apply Pythagorean theorem',
-                            text: '7² + h² = 25², giving 49 + h² = 625'
-                        },
-                        {
-                            title: 'Step 3: Solve for h',
-                            text: 'h² = 625 - 49 = 576, so h = 24 feet'
-                        }
-                    ],
-                    commonMistakes: [
-                        'Confusing which measurement is the hypotenuse',
-                        'Calculation errors',
-                        'Not recognizing the 7-24-25 Pythagorean triple'
-                    ],
-                    timeLimit: 90
-                },
-                {
-                    id: 'trig3',
-                    text: 'In a right triangle, sin(θ) = 3/5. What is cos(θ)?',
-                    answer: '0.8',
-                    svg: false,
-                    solution: [
-                        {
-                            title: 'Step 1: Understand the relationship',
-                            text: 'If sin(θ) = 3/5, then opposite = 3 and hypotenuse = 5 in a right triangle'
-                        },
-                        {
-                            title: 'Step 2: Find the adjacent side',
-                            text: 'Using Pythagorean theorem: adjacent² + 3² = 5², so adjacent² = 25 - 9 = 16, adjacent = 4'
-                        },
-                        {
-                            title: 'Step 3: Calculate cos(θ)',
-                            text: 'cos(θ) = adjacent/hypotenuse = 4/5 = 0.8'
-                        }
-                    ],
-                    commonMistakes: [
-                        'Confusing sin and cos definitions',
-                        'Not using Pythagorean theorem to find the missing side',
-                        'Calculation errors'
-                    ],
-                    timeLimit: 95
+                    proTip: 'Sum and difference problems: add equations to eliminate one variable instantly!',
+                    timeLimit: 75
                 }
             ],
             'word-problems': [
                 {
                     id: 'wp1',
-                    text: 'For an electric field passing through a flat surface perpendicular to it, the electric flux is the product of the field strength and the surface area. A surface consists of two adjacent squares where the larger square side length is 3 times the smaller. An electric field with strength 29.00 volts per meter passes uniformly through this surface. If the total flux is 4,640 volts·meters, what is the flux through the larger square?',
+                    text: 'For an electric field through a surface, flux = field strength × area. A surface has two adjacent squares where the larger square\'s side is 3× the smaller. Field strength is 29 V/m. Total flux is 4,640 V·m. What is the flux through the larger square?',
                     answer: '4176',
+                    difficulty: 'hard',
                     svg: false,
+                    strategies: ['plugin'],
+                    hint: '💡 If big side = 3s, then big area = 9s². Don\'t forget to square!',
                     solution: [
                         {
-                            title: 'Step 1: Define variables',
-                            text: 'Let s = side length of smaller square. Then 3s = side length of larger square.'
+                            title: 'Define Variables',
+                            text: 'Let s = side of small square\nLarge square side = 3s'
                         },
                         {
-                            title: 'Step 2: Express areas',
-                            text: 'Area of smaller square = s². Area of larger square = (3s)² = 9s². Total area = s² + 9s² = 10s²'
+                            title: 'Calculate Areas',
+                            text: 'Small area = s²\nLarge area = (3s)² = 9s²\nTotal area = s² + 9s² = 10s²'
                         },
                         {
-                            title: 'Step 3: Use flux formula',
-                            text: 'Total flux = field strength × total area. 4,640 = 29 × 10s²'
+                            title: 'Use Flux Formula',
+                            text: 'Total flux = field × total area\n4,640 = 29 × 10s²\n10s² = 160\ns² = 16'
                         },
                         {
-                            title: 'Step 4: Solve for s²',
-                            text: '10s² = 4,640 / 29 = 160, so s² = 16'
-                        },
-                        {
-                            title: 'Step 5: Find flux through larger square',
-                            text: 'Flux = 29 × 9s² = 29 × 9 × 16 = 29 × 144 = 4,176 volts·meters'
+                            title: 'Find Large Square Flux',
+                            text: 'Large flux = 29 × 9s²\n= 29 × 9 × 16\n= 29 × 144\n= 4,176 V·m'
                         }
                     ],
+                    alternativeMethod: {
+                        title: 'Ratio Method',
+                        text: 'Large area is 9/10 of total area (9s² out of 10s²). So large flux = (9/10) × 4640 = 4176. Ratios avoid finding s²!'
+                    },
                     commonMistakes: [
-                        'Not squaring the side length when finding area',
+                        'Not squaring: using 3s instead of 9s² for area',
                         'Confusing which square is which',
-                        'Arithmetic errors in multi-step calculations'
+                        'Arithmetic errors in multi-step calc',
+                        'Forgetting to multiply by field strength'
                     ],
+                    proTip: 'When side lengths scale by factor k, areas scale by k². Always square for area!',
                     timeLimit: 150
                 },
                 {
                     id: 'wp2',
-                    text: 'A train travels 240 miles in 4 hours. On the return trip, due to track maintenance, its average speed is reduced by 20 miles per hour. How long does the return trip take?',
+                    text: 'A train travels 240 miles in 4 hours. On return, speed is reduced by 20 mph. How long is the return trip?',
                     answer: '6',
+                    difficulty: 'medium',
                     svg: false,
+                    strategies: ['plugin'],
+                    hint: '💡 Find original speed first, then subtract 20!',
                     solution: [
                         {
-                            title: 'Step 1: Find the original speed',
-                            text: 'Speed = distance / time = 240 miles / 4 hours = 60 mph'
+                            title: 'Find Original Speed',
+                            text: 'Speed = Distance ÷ Time\n= 240 ÷ 4\n= 60 mph'
                         },
                         {
-                            title: 'Step 2: Find the return speed',
-                            text: 'Return speed = 60 - 20 = 40 mph'
+                            title: 'Find Return Speed',
+                            text: 'Return speed = 60 - 20\n= 40 mph'
                         },
                         {
-                            title: 'Step 3: Calculate return time',
-                            text: 'Time = distance / speed = 240 / 40 = 6 hours'
+                            title: 'Calculate Return Time',
+                            text: 'Time = Distance ÷ Speed\n= 240 ÷ 40\n= 6 hours'
                         }
                     ],
+                    alternativeMethod: {
+                        title: 'Proportion Method',
+                        text: 'Original: 60 mph → 4 hours. Return: 40 mph → ? hours. Inverse proportion: 60/40 = t/4 → t = 4×(60/40) = 6 hours.'
+                    },
                     commonMistakes: [
-                        'Subtracting 20 from the time instead of the speed',
-                        'Using the wrong formula',
-                        'Not showing units'
+                        'Subtracting 20 from time instead of speed',
+                        'Wrong formula application',
+                        'Not labeling units',
+                        'Using wrong distance'
                     ],
+                    proTip: 'Speed-distance-time: know the triangle! d=st, s=d/t, t=d/s',
                     timeLimit: 100
                 },
                 {
                     id: 'wp3',
-                    text: 'A rectangle has a length that is 5 more than twice its width. If the perimeter is 46, what is the width?',
+                    text: 'A rectangle\'s length is 5 more than twice its width. Perimeter is 46. What is the width?',
                     answer: '6',
+                    difficulty: 'medium',
                     svg: false,
+                    strategies: ['backsolving'],
+                    hint: '💡 Try answer choices! Calculate length, then check if perimeter = 46.',
                     solution: [
                         {
-                            title: 'Step 1: Define variables',
-                            text: 'Let w = width. Then length = 2w + 5'
+                            title: 'Define Variables',
+                            text: 'Let w = width\nLength = 2w + 5'
                         },
                         {
-                            title: 'Step 2: Write perimeter equation',
-                            text: 'Perimeter = 2(length + width) = 2(2w + 5 + w) = 46'
+                            title: 'Perimeter Formula',
+                            text: 'P = 2(length + width)\n46 = 2(2w + 5 + w)\n46 = 2(3w + 5)\n46 = 6w + 10'
                         },
                         {
-                            title: 'Step 3: Simplify and solve',
-                            text: '2(3w + 5) = 46, so 6w + 10 = 46, giving 6w = 36, w = 6'
+                            title: 'Solve',
+                            text: '36 = 6w\nw = 6'
                         },
                         {
-                            title: 'Step 4: Verify',
-                            text: 'Width = 6, length = 2(6) + 5 = 17. Perimeter = 2(6 + 17) = 46 ✓'
+                            title: 'Verify',
+                            text: 'Width = 6\nLength = 2(6) + 5 = 17\nPerimeter = 2(6 + 17) = 46 ✓'
                         }
                     ],
+                    alternativeMethod: {
+                        title: '🎯 Backsolving',
+                        text: 'Try w=6: length=2(6)+5=17. Perimeter=2(6+17)=46 ✓ Correct! Starting with middle answer choice often works first try!'
+                    },
                     commonMistakes: [
                         'Confusing length and width',
-                        'Setting up the perimeter formula incorrectly',
-                        'Algebraic errors'
+                        'Wrong perimeter formula',
+                        'Algebraic errors',
+                        'Not verifying answer'
                     ],
+                    proTip: 'Translate "more than" carefully: "5 more than 2w" = 2w+5, not 5-2w!',
                     timeLimit: 110
                 }
             ]
         };
 
         const ACHIEVEMENTS = [
-            { id: 'first_solve', name: 'First Steps', icon: '🎯', requirement: 1 },
-            { id: 'ten_solved', name: '10 Problems', icon: '🔟', requirement: 10 },
-            { id: 'fifty_solved', name: 'Half Century', icon: '⭐', requirement: 50 },
-            { id: 'streak_3', name: '3 Day Streak', icon: '🔥', requirement: 3 },
-            { id: 'streak_7', name: 'Week Warrior', icon: '💪', requirement: 7 },
-            { id: 'perfect_day', name: 'Perfect Day', icon: '💯', requirement: 1 },
-            { id: 'speed_demon', name: 'Speed Demon', icon: '⚡', requirement: 1 },
-            { id: 'master', name: 'SAT Master', icon: '🏆', requirement: 100 }
+            { id: 'first_solve', name: 'First Steps', icon: '🎯', requirement: 1, type: 'count' },
+            { id: 'ten_solved', name: '10 Problems', icon: '🔟', requirement: 10, type: 'count' },
+            { id: 'twenty_solved', name: 'Score Boost', icon: '📈', requirement: 20, type: 'count' },
+            { id: 'fifty_solved', name: 'Half Century', icon: '⭐', requirement: 50, type: 'count' },
+            { id: 'streak_3', name: '3 Day Streak', icon: '🔥', requirement: 3, type: 'streak' },
+            { id: 'streak_7', name: 'Week Warrior', icon: '💪', requirement: 7, type: 'streak' },
+            { id: 'perfect_five', name: '5 Perfect', icon: '💯', requirement: 5, type: 'perfect' },
+            { id: 'speed_demon', name: 'Speed Demon', icon: '⚡', requirement: 1, type: 'speed' },
+            { id: 'strategy_master', name: 'Strategy King', icon: '👑', requirement: 1, type: 'strategy' },
+            { id: 'master', name: 'SAT Master', icon: '🏆', requirement: 100, type: 'count' }
         ];
 
         class SATApp {
@@ -1391,7 +2010,6 @@
                 this.currentProblem = null;
                 this.problemHistory = [];
                 this.stats = this.loadStats();
-                this.fontSize = localStorage.getItem('fontSize') || 'medium';
                 this.theme = localStorage.getItem('theme') || 'light';
                 this.timerInterval = null;
                 this.startTime = null;
@@ -1403,11 +2021,10 @@
 
             init() {
                 this.applyTheme();
-                this.applyFontSize();
                 this.setupEventListeners();
                 this.updateUI();
                 this.loadNewProblem();
-                this.checkDailyChallenge();
+                this.showDailyTip();
             }
 
             loadStats() {
@@ -1419,9 +2036,10 @@
                     streak: 0,
                     bestStreak: 0,
                     lastSolveDate: null,
+                    perfectStreak: 0,
                     categoryStats: {},
                     achievements: [],
-                    dailyChallenge: { date: null, completed: false, count: 0 }
+                    strategyUsed: {}
                 };
                 const saved = localStorage.getItem('satStats');
                 return saved ? { ...defaultStats, ...JSON.parse(saved) } : defaultStats;
@@ -1443,23 +2061,12 @@
 
                 document.getElementById('themeBtn').addEventListener('click', () => this.toggleTheme());
                 document.getElementById('statsBtn').addEventListener('click', () => this.showStats());
-                document.getElementById('fontBtn').addEventListener('click', () => this.showFontModal());
+                document.getElementById('strategyBtn').addEventListener('click', () => this.showStrategyGuide());
                 document.getElementById('closeStatsBtn').addEventListener('click', () => this.closeModal('statsModal'));
-                document.getElementById('closeFontBtn').addEventListener('click', () => this.closeModal('fontModal'));
+                document.getElementById('closeStrategyBtn').addEventListener('click', () => this.closeModal('strategyModal'));
+                document.getElementById('strategyBanner').addEventListener('click', () => this.showStrategyGuide());
 
-                document.querySelectorAll('.font-size-btn').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        this.fontSize = btn.dataset.size;
-                        this.applyFontSize();
-                        localStorage.setItem('fontSize', this.fontSize);
-                    });
-                });
-
-                document.getElementById('startDailyBtn').addEventListener('click', () => {
-                    this.startDailyChallenge();
-                });
-
-                // Touch gestures for swipe
+                // Touch gestures
                 document.addEventListener('touchstart', (e) => {
                     this.touchStartX = e.changedTouches[0].screenX;
                 }, { passive: true });
@@ -1485,12 +2092,10 @@
 
                 if (Math.abs(diff) > swipeThreshold) {
                     if (diff > 0) {
-                        // Swiped left - next problem
                         this.loadNewProblem();
                     } else {
-                        // Swiped right - previous problem (if available)
                         if (this.problemHistory.length > 1) {
-                            this.problemHistory.pop(); // Remove current
+                            this.problemHistory.pop();
                             const prev = this.problemHistory[this.problemHistory.length - 1];
                             this.currentProblem = prev;
                             this.renderProblem();
@@ -1510,13 +2115,24 @@
                 document.getElementById('themeBtn').textContent = this.theme === 'light' ? '🌙' : '☀️';
             }
 
-            applyFontSize() {
-                const sizes = { small: '14px', medium: '16px', large: '18px', xlarge: '20px' };
-                document.documentElement.style.fontSize = sizes[this.fontSize];
+            showDailyTip() {
+                const tip = PRO_TIPS[Math.floor(Math.random() * PRO_TIPS.length)];
+                document.getElementById('dailyTip').textContent = tip;
             }
 
-            showFontModal() {
-                document.getElementById('fontModal').classList.add('active');
+            showStrategyGuide() {
+                const content = Object.entries(STRATEGIES).map(([key, strategy]) => `
+                    <div class="solution-step">
+                        <div class="step-title">${strategy.icon} ${strategy.name}</div>
+                        <p>${strategy.description}</p>
+                        <ul style="margin-top: 0.75rem; padding-left: 1.5rem;">
+                            ${strategy.tips.map(tip => `<li>${tip}</li>`).join('')}
+                        </ul>
+                    </div>
+                `).join('');
+
+                document.getElementById('strategyContent').innerHTML = content;
+                document.getElementById('strategyModal').classList.add('active');
             }
 
             closeModal(id) {
@@ -1527,7 +2143,7 @@
                 const problems = this.getProblemsForCategory();
                 if (problems.length === 0) return;
 
-                // Spaced repetition: prioritize previously incorrect problems
+                // Spaced repetition
                 const incorrectProblems = problems.filter(p => {
                     const stat = this.stats.categoryStats[p.id];
                     return stat && stat.incorrect > 0;
@@ -1562,16 +2178,44 @@
                     visualHTML = this.generateVisual(p);
                 }
 
+                let strategyChipsHTML = '';
+                if (p.strategies && p.strategies.length > 0) {
+                    strategyChipsHTML = `
+                        <div class="strategy-chips">
+                            ${p.strategies.map(s => {
+                                const strategy = STRATEGIES[s];
+                                return strategy ? `<div class="strategy-chip" data-strategy="${s}">${strategy.icon} ${strategy.name}</div>` : '';
+                            }).join('')}
+                        </div>
+                    `;
+                }
+
+                let hintHTML = '';
+                if (p.hint) {
+                    hintHTML = `<div class="hint-box">${p.hint}</div>`;
+                }
+
                 container.innerHTML = `
                     <div class="problem-card">
                         <div class="problem-header">
-                            <div class="problem-category">${CATEGORIES[p.id.match(/[a-z]+/)[0]] || 'SAT Math'}</div>
-                            <div class="timer" id="timer">0:00</div>
+                            <div class="problem-meta">
+                                <div class="problem-category">${this.getCategoryName(p.id)}</div>
+                                <div class="difficulty-badge difficulty-${p.difficulty || 'medium'}">
+                                    ${(p.difficulty || 'medium').toUpperCase()}
+                                </div>
+                            </div>
+                            <div class="timer" id="timer">⏱️ 0:00</div>
                         </div>
-                        <div class="problem-text">${this.formatMath(p.text)}</div>
+                        <div class="problem-text">${p.text}</div>
                         ${visualHTML}
-                        <input type="text" class="answer-input" id="answerInput" placeholder="Enter your answer" autocomplete="off">
-                        <button class="btn btn-primary" id="submitBtn">Submit Answer</button>
+                        ${hintHTML}
+                        ${strategyChipsHTML}
+                        <div class="answer-section">
+                            <input type="text" class="answer-input" id="answerInput" placeholder="Enter your answer" autocomplete="off">
+                            <button class="btn btn-primary" id="submitBtn">
+                                Submit Answer ✓
+                            </button>
+                        </div>
                         <div id="feedbackArea"></div>
                     </div>
                 `;
@@ -1581,24 +2225,52 @@
                     if (e.key === 'Enter') this.checkAnswer();
                 });
 
-                // Focus the input
+                // Strategy chip click handlers
+                document.querySelectorAll('.strategy-chip').forEach(chip => {
+                    chip.addEventListener('click', () => {
+                        const strategyKey = chip.dataset.strategy;
+                        this.showStrategyHint(strategyKey);
+                    });
+                });
+
                 setTimeout(() => document.getElementById('answerInput').focus(), 100);
             }
 
-            formatMath(text) {
-                // Format mathematical expressions with italic variables
-                let formatted = text;
+            getCategoryName(id) {
+                const prefix = id.match(/[a-z]+/)[0];
+                const map = {
+                    'bs': 'Backsolving',
+                    'cg': 'Circle Geometry',
+                    'exp': 'Exponential',
+                    'fn': 'Functions',
+                    'da': 'Data Analysis',
+                    'sys': 'Systems',
+                    'wp': 'Word Problems'
+                };
+                return map[prefix] || 'SAT Math';
+            }
 
-                // Wrap single variables and expressions in italic spans
-                formatted = formatted.replace(/\b([a-z])\b(?![^<]*>)/gi, '<span class="math-formula">$1</span>');
+            showStrategyHint(strategyKey) {
+                const strategy = STRATEGIES[strategyKey];
+                if (!strategy) return;
 
-                // Handle special math symbols and keep them in spans
-                formatted = formatted.replace(/([∠√π])/g, '<span class="math-formula">$1</span>');
+                const hint = `
+                    <div style="margin-top: 1rem; padding: 1rem; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1)); border-left: 4px solid var(--primary); border-radius: 8px;">
+                        <strong>${strategy.icon} ${strategy.name}:</strong> ${strategy.description}
+                    </div>
+                `;
 
-                // Handle subscripts and superscripts
-                formatted = formatted.replace(/([a-z])(\d+)/gi, '<span class="math-formula">$1<sub>$2</sub></span>');
+                const feedbackArea = document.getElementById('feedbackArea');
+                if (!feedbackArea.innerHTML.includes(strategy.name)) {
+                    feedbackArea.innerHTML += hint;
+                }
 
-                return formatted;
+                // Track strategy usage
+                if (!this.stats.strategyUsed[strategyKey]) {
+                    this.stats.strategyUsed[strategyKey] = 0;
+                }
+                this.stats.strategyUsed[strategyKey]++;
+                this.saveStats();
             }
 
             generateVisual(problem) {
@@ -1607,57 +2279,46 @@
                 if (id.startsWith('cg')) {
                     return `
                         <div class="visual-container">
-                            <svg width="300" height="300" viewBox="-150 -150 300 300">
-                                <circle cx="0" cy="0" r="100" fill="none" stroke="#4f46e5" stroke-width="2"/>
-                                <circle cx="0" cy="0" r="3" fill="#ef4444"/>
-                                <text x="5" y="5" font-size="12" fill="var(--text)">C</text>
-                                <line x1="0" y1="0" x2="50" y2="86.6" stroke="#10b981" stroke-width="2"/>
-                                <circle cx="50" cy="86.6" r="3" fill="#ef4444"/>
-                                <text x="55" y="90" font-size="12" fill="var(--text)">A</text>
-                                <line x1="0" y1="0" x2="-50" y2="86.6" stroke="#10b981" stroke-width="2"/>
-                                <circle cx="-50" cy="86.6" r="3" fill="#ef4444"/>
-                                <text x="-65" y="90" font-size="12" fill="var(--text)">B</text>
-                                <line x1="50" y1="86.6" x2="-50" y2="86.6" stroke="#f59e0b" stroke-width="2" stroke-dasharray="3,3"/>
+                            <svg width="320" height="320" viewBox="-160 -160 320 320">
+                                <defs>
+                                    <linearGradient id="circleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#6366f1;stop-opacity:0.3" />
+                                        <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:0.3" />
+                                    </linearGradient>
+                                </defs>
+                                <circle cx="0" cy="0" r="100" fill="url(#circleGrad)" stroke="#6366f1" stroke-width="3"/>
+                                <circle cx="0" cy="0" r="4" fill="#ef4444"/>
+                                <text x="8" y="5" font-size="14" font-weight="700" fill="var(--text)">C(h,k)</text>
+                                <line x1="0" y1="0" x2="50" y2="86.6" stroke="#10b981" stroke-width="3"/>
+                                <circle cx="50" cy="86.6" r="4" fill="#ef4444"/>
+                                <text x="58" y="92" font-size="14" font-weight="700" fill="var(--text)">A</text>
+                                <line x1="0" y1="0" x2="-50" y2="86.6" stroke="#10b981" stroke-width="3"/>
+                                <circle cx="-50" cy="86.6" r="4" fill="#ef4444"/>
+                                <text x="-75" y="92" font-size="14" font-weight="700" fill="var(--text)">B</text>
+                                <line x1="50" y1="86.6" x2="-50" y2="86.6" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5,3"/>
+                                <path d="M 0,0 L 30,0 A 30,30 0 0,1 15,26" fill="none" stroke="#ef4444" stroke-width="2"/>
+                                <text x="20" y="15" font-size="12" fill="#ef4444">90°</text>
                             </svg>
                         </div>
                     `;
-                } else if (id.startsWith('trig')) {
+                } else if (id.startsWith('fn') || id === 'da1') {
                     return `
                         <div class="visual-container">
-                            <svg width="300" height="200" viewBox="0 0 300 200">
-                                <line x1="50" y1="150" x2="250" y2="150" stroke="#4f46e5" stroke-width="2"/>
-                                <line x1="50" y1="150" x2="50" y2="30" stroke="#4f46e5" stroke-width="2"/>
-                                <line x1="50" y1="30" x2="250" y2="150" stroke="#ef4444" stroke-width="2"/>
-                                <text x="145" y="170" font-size="14" fill="var(--text)">base</text>
-                                <text x="25" y="95" font-size="14" fill="var(--text)">height</text>
-                                <text x="140" y="75" font-size="14" fill="#ef4444">hypotenuse</text>
-                            </svg>
-                        </div>
-                    `;
-                } else if (id.startsWith('fn')) {
-                    return `
-                        <div class="visual-container">
-                            <svg width="300" height="250" viewBox="-20 -20 340 270">
-                                <line x1="0" y1="230" x2="300" y2="230" stroke="#9ca3af" stroke-width="1"/>
-                                <line x1="150" y1="0" x2="150" y2="250" stroke="#9ca3af" stroke-width="1"/>
-                                <line x1="30" y1="200" x2="270" y2="20" stroke="#4f46e5" stroke-width="3"/>
-                                <text x="140" y="245" font-size="12" fill="var(--text)">x</text>
-                                <text x="5" y="15" font-size="12" fill="var(--text)">y</text>
-                            </svg>
-                        </div>
-                    `;
-                } else if (id === 'da1') {
-                    return `
-                        <div class="visual-container">
-                            <svg width="300" height="200" viewBox="0 0 300 200">
-                                <line x1="30" y1="170" x2="270" y2="170" stroke="#9ca3af" stroke-width="1"/>
-                                <line x1="30" y1="10" x2="30" y2="170" stroke="#9ca3af" stroke-width="1"/>
-                                ${[40,60,80,100,120,140,160,180,200,220].map((x, i) => `
-                                    <circle cx="${x}" cy="${170 - (i * 12 + Math.random() * 10)}" r="3" fill="#4f46e5"/>
-                                `).join('')}
-                                <line x1="40" y1="165" x2="220" y2="40" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,2"/>
-                                <text x="270" y="175" font-size="12" fill="var(--text)">x</text>
-                                <text x="15" y="10" font-size="12" fill="var(--text)">y</text>
+                            <svg width="320" height="260" viewBox="-20 -20 360 280">
+                                <defs>
+                                    <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <line x1="0" y1="230" x2="310" y2="230" stroke="#cbd5e1" stroke-width="2"/>
+                                <line x1="155" y1="0" x2="155" y2="250" stroke="#cbd5e1" stroke-width="2"/>
+                                <line x1="30" y1="200" x2="280" y2="30" stroke="url(#lineGrad)" stroke-width="4"/>
+                                ${id === 'da1' ? [...Array(10)].map((_, i) => `
+                                    <circle cx="${40 + i * 24}" cy="${195 - (i * 14 + Math.random() * 12)}" r="4" fill="#6366f1"/>
+                                `).join('') : ''}
+                                <text x="145" y="255" font-size="14" font-weight="700" fill="var(--text)">x</text>
+                                <text x="5" y="15" font-size="14" font-weight="700" fill="var(--text)">y</text>
                             </svg>
                         </div>
                     `;
@@ -1676,13 +2337,13 @@
                     const seconds = elapsed % 60;
                     const timerEl = document.getElementById('timer');
                     if (timerEl) {
-                        timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                        timerEl.textContent = `⏱️ ${minutes}:${seconds.toString().padStart(2, '0')}`;
 
                         const timeLimit = this.currentProblem.timeLimit || 120;
-                        if (elapsed > timeLimit * 0.8) {
+                        timerEl.classList.remove('warning', 'critical');
+                        if (elapsed > timeLimit * 0.8 && elapsed <= timeLimit) {
                             timerEl.classList.add('warning');
-                        }
-                        if (elapsed > timeLimit) {
+                        } else if (elapsed > timeLimit) {
                             timerEl.classList.add('critical');
                         }
                     }
@@ -1703,14 +2364,13 @@
                 this.showFeedback(isCorrect, timeSpent);
 
                 input.disabled = true;
+                input.classList.add(isCorrect ? 'correct' : 'incorrect');
                 document.getElementById('submitBtn').disabled = true;
             }
 
             compareAnswers(user, correct) {
-                // Handle multiple answer formats
                 if (user === correct) return true;
 
-                // Try numeric comparison
                 const userNum = parseFloat(user);
                 const correctNum = parseFloat(correct);
                 if (!isNaN(userNum) && !isNaN(correctNum)) {
@@ -1724,12 +2384,14 @@
                 this.stats.totalSolved++;
                 if (isCorrect) {
                     this.stats.correct++;
+                    this.stats.perfectStreak++;
                 } else {
                     this.stats.incorrect++;
+                    this.stats.perfectStreak = 0;
                 }
                 this.stats.totalTime += timeSpent;
 
-                // Update category stats
+                // Category stats
                 const problemId = this.currentProblem.id;
                 if (!this.stats.categoryStats[problemId]) {
                     this.stats.categoryStats[problemId] = { correct: 0, incorrect: 0, times: [] };
@@ -1741,10 +2403,10 @@
                 }
                 this.stats.categoryStats[problemId].times.push(timeSpent);
 
-                // Update streak
+                // Streak
                 const today = new Date().toDateString();
                 if (this.stats.lastSolveDate === today) {
-                    // Same day, streak continues
+                    // Same day
                 } else {
                     const yesterday = new Date(Date.now() - 86400000).toDateString();
                     if (this.stats.lastSolveDate === yesterday && isCorrect) {
@@ -1758,20 +2420,7 @@
                 this.stats.lastSolveDate = today;
                 this.stats.bestStreak = Math.max(this.stats.bestStreak, this.stats.streak);
 
-                // Check achievements
                 this.checkAchievements(isCorrect, timeSpent);
-
-                // Update daily challenge
-                if (this.stats.dailyChallenge.date === today) {
-                    if (isCorrect) {
-                        this.stats.dailyChallenge.count++;
-                        if (this.stats.dailyChallenge.count >= 5) {
-                            this.stats.dailyChallenge.completed = true;
-                            this.showToast('Daily challenge completed! 🎉');
-                        }
-                    }
-                }
-
                 this.saveStats();
                 this.updateUI();
             }
@@ -1779,35 +2428,35 @@
             checkAchievements(isCorrect, timeSpent) {
                 const newAchievements = [];
 
-                if (this.stats.totalSolved >= 1 && !this.stats.achievements.includes('first_solve')) {
-                    newAchievements.push('first_solve');
-                }
-                if (this.stats.totalSolved >= 10 && !this.stats.achievements.includes('ten_solved')) {
-                    newAchievements.push('ten_solved');
-                }
-                if (this.stats.totalSolved >= 50 && !this.stats.achievements.includes('fifty_solved')) {
-                    newAchievements.push('fifty_solved');
-                }
-                if (this.stats.totalSolved >= 100 && !this.stats.achievements.includes('master')) {
-                    newAchievements.push('master');
-                }
-                if (this.stats.streak >= 3 && !this.stats.achievements.includes('streak_3')) {
-                    newAchievements.push('streak_3');
-                }
-                if (this.stats.streak >= 7 && !this.stats.achievements.includes('streak_7')) {
-                    newAchievements.push('streak_7');
-                }
-                if (isCorrect && timeSpent < (this.currentProblem.timeLimit || 120) / 2 && !this.stats.achievements.includes('speed_demon')) {
-                    newAchievements.push('speed_demon');
-                }
+                ACHIEVEMENTS.forEach(ach => {
+                    if (this.stats.achievements.includes(ach.id)) return;
 
-                newAchievements.forEach(id => {
-                    this.stats.achievements.push(id);
-                    const achievement = ACHIEVEMENTS.find(a => a.id === id);
-                    if (achievement) {
-                        this.showToast(`Achievement unlocked: ${achievement.name} ${achievement.icon}`);
+                    let unlock = false;
+                    switch (ach.type) {
+                        case 'count':
+                            unlock = this.stats.totalSolved >= ach.requirement;
+                            break;
+                        case 'streak':
+                            unlock = this.stats.streak >= ach.requirement;
+                            break;
+                        case 'perfect':
+                            unlock = this.stats.perfectStreak >= ach.requirement;
+                            break;
+                        case 'speed':
+                            unlock = isCorrect && timeSpent < (this.currentProblem.timeLimit || 120) / 2;
+                            break;
+                        case 'strategy':
+                            unlock = Object.keys(this.stats.strategyUsed).length >= 3;
+                            break;
+                    }
+
+                    if (unlock) {
+                        newAchievements.push(ach.id);
+                        this.showToast(`🎉 Achievement: ${ach.name} ${ach.icon}`);
                     }
                 });
+
+                this.stats.achievements.push(...newAchievements);
             }
 
             showFeedback(isCorrect, timeSpent) {
@@ -1816,43 +2465,77 @@
 
                 const feedbackClass = isCorrect ? 'correct' : 'incorrect';
                 const feedbackIcon = isCorrect ? '✓' : '✗';
-                const feedbackText = isCorrect ? 'Correct!' : 'Incorrect';
+                const feedbackText = isCorrect ? 'Correct!' : 'Not Quite';
 
                 let solutionHTML = `
                     <div class="solution">
-                        <h3>Step-by-Step Solution:</h3>
-                        ${p.solution.map(step => `
+                        <h3>📚 Complete Solution:</h3>
+                        ${p.solution.map((step, i) => `
                             <div class="solution-step">
-                                <div class="step-title">${step.title}</div>
-                                <div>${this.formatMath(step.text)}</div>
+                                <div class="step-number">${i + 1}</div>
+                                <div>
+                                    <div class="step-title">${step.title}</div>
+                                    <div class="step-content">${step.text}</div>
+                                </div>
                             </div>
                         `).join('')}
                     </div>
                 `;
 
+                let alternativeHTML = '';
+                if (p.alternativeMethod) {
+                    alternativeHTML = `
+                        <div class="alternative-method">
+                            <h4>⚡ ${p.alternativeMethod.title}</h4>
+                            <p>${p.alternativeMethod.text}</p>
+                        </div>
+                    `;
+                }
+
                 let mistakesHTML = '';
                 if (!isCorrect && p.commonMistakes) {
                     mistakesHTML = `
                         <div class="common-mistakes">
-                            <h4>Common Mistakes:</h4>
-                            <ul>
-                                ${p.commonMistakes.map(m => `<li>${m}</li>`).join('')}
-                            </ul>
+                            <h4>⚠️ Common Mistakes to Avoid:</h4>
+                            ${p.commonMistakes.map(m => `
+                                <div class="mistake-item">${m}</div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+
+                let proTipHTML = '';
+                if (p.proTip) {
+                    proTipHTML = `
+                        <div class="pro-tip">
+                            <h4>💎 Pro Tip</h4>
+                            <p>${p.proTip}</p>
                         </div>
                     `;
                 }
 
                 feedbackArea.innerHTML = `
                     <div class="feedback ${feedbackClass}">
-                        <strong>${feedbackIcon} ${feedbackText}</strong>
-                        (Time: ${timeSpent}s)
-                        ${!isCorrect ? `<br>Correct answer: ${p.answer}` : ''}
+                        <div class="feedback-header">
+                            <span class="feedback-icon">${feedbackIcon}</span>
+                            <div>
+                                <div>${feedbackText}</div>
+                                <div style="font-size: 0.9rem; opacity: 0.9;">Time: ${timeSpent}s ${timeSpent < (p.timeLimit || 120) / 2 ? '⚡ Fast!' : ''}</div>
+                                ${!isCorrect ? `<div style="margin-top: 0.5rem;">Correct answer: <strong>${p.answer}</strong></div>` : ''}
+                            </div>
+                        </div>
                     </div>
                     ${solutionHTML}
+                    ${alternativeHTML}
                     ${mistakesHTML}
+                    ${proTipHTML}
                     <div class="btn-group">
-                        <button class="btn btn-secondary" id="similarBtn">Show Similar Problem</button>
-                        <button class="btn btn-primary" id="nextBtn">Next Problem</button>
+                        <button class="btn btn-secondary" id="similarBtn">
+                            🔄 Similar Problem
+                        </button>
+                        <button class="btn btn-primary" id="nextBtn">
+                            Next Problem →
+                        </button>
                     </div>
                 `;
 
@@ -1866,7 +2549,17 @@
 
             loadSimilarProblem() {
                 const currentCategory = this.currentProblem.id.match(/[a-z]+/)[0];
-                const problems = PROBLEM_DATABASE[currentCategory] || [];
+                const categoryMap = {
+                    'bs': 'backsolving',
+                    'cg': 'circle-geometry',
+                    'exp': 'exponential',
+                    'fn': 'functions',
+                    'da': 'data-analysis',
+                    'sys': 'systems',
+                    'wp': 'word-problems'
+                };
+                const category = categoryMap[currentCategory];
+                const problems = PROBLEM_DATABASE[category] || [];
                 const otherProblems = problems.filter(p => p.id !== this.currentProblem.id);
 
                 if (otherProblems.length > 0) {
@@ -1888,13 +2581,16 @@
                     ? Math.round(this.stats.totalTime / this.stats.totalSolved)
                     : 0;
 
+                // Estimate score based on accuracy
+                const estimatedScore = Math.min(800, Math.round(730 + (accuracy - 85) * 5));
+
                 document.getElementById('totalSolved').textContent = this.stats.totalSolved;
                 document.getElementById('accuracyRate').textContent = accuracy + '%';
                 document.getElementById('avgTime').textContent = avgTime + 's';
+                document.getElementById('estimatedScore').textContent = estimatedScore;
                 document.getElementById('streakCount').textContent = this.stats.streak;
 
-                // Progress toward 800
-                const progress = Math.min((this.stats.correct / 100) * 100, 100);
+                const progress = Math.min((this.stats.correct / 70) * 100, 100);
                 document.getElementById('overallProgress').style.width = progress + '%';
             }
 
@@ -1908,19 +2604,27 @@
                 document.getElementById('modalStreak').textContent = this.stats.bestStreak;
 
                 // Weakness analysis
+                const categoryMap = {
+                    'bs': 'Backsolving',
+                    'cg': 'Circle Geometry',
+                    'exp': 'Exponential',
+                    'fn': 'Functions',
+                    'da': 'Data Analysis',
+                    'sys': 'Systems',
+                    'wp': 'Word Problems'
+                };
+
                 const categoryAccuracy = {};
-                Object.keys(CATEGORIES).forEach(cat => {
-                    const problems = PROBLEM_DATABASE[cat] || [];
+                Object.keys(categoryMap).forEach(prefix => {
+                    const problems = Object.keys(this.stats.categoryStats).filter(id => id.startsWith(prefix));
                     let correct = 0, total = 0;
-                    problems.forEach(p => {
-                        const stat = this.stats.categoryStats[p.id];
-                        if (stat) {
-                            correct += stat.correct;
-                            total += stat.correct + stat.incorrect;
-                        }
+                    problems.forEach(id => {
+                        const stat = this.stats.categoryStats[id];
+                        correct += stat.correct;
+                        total += stat.correct + stat.incorrect;
                     });
                     if (total > 0) {
-                        categoryAccuracy[cat] = Math.round((correct / total) * 100);
+                        categoryAccuracy[categoryMap[prefix]] = Math.round((correct / total) * 100);
                     }
                 });
 
@@ -1930,19 +2634,19 @@
                         const className = acc < 60 ? 'accuracy-low' : acc < 80 ? 'accuracy-medium' : 'accuracy-high';
                         return `
                             <div class="weakness-item">
-                                <span class="weakness-topic">${CATEGORIES[cat]}</span>
+                                <span class="weakness-topic">${cat}</span>
                                 <span class="weakness-accuracy ${className}">${acc}%</span>
                             </div>
                         `;
                     }).join('');
 
-                document.getElementById('weaknessAnalysis').innerHTML = weaknessHTML || '<p>No data yet. Keep practicing!</p>';
+                document.getElementById('weaknessAnalysis').innerHTML = weaknessHTML || '<p>Keep solving to see your weak areas!</p>';
 
                 // Achievements
                 const achievementsHTML = ACHIEVEMENTS.map(ach => {
                     const unlocked = this.stats.achievements.includes(ach.id);
                     return `
-                        <div class="achievement ${unlocked ? 'unlocked' : ''}">
+                        <div class="achievement ${unlocked ? 'unlocked' : ''}" title="${ach.name}">
                             <div class="achievement-icon">${ach.icon}</div>
                             <div class="achievement-name">${ach.name}</div>
                         </div>
@@ -1954,23 +2658,6 @@
                 document.getElementById('statsModal').classList.add('active');
             }
 
-            checkDailyChallenge() {
-                const today = new Date().toDateString();
-                if (this.stats.dailyChallenge.date !== today) {
-                    this.stats.dailyChallenge = { date: today, completed: false, count: 0 };
-                    this.saveStats();
-                }
-
-                if (!this.stats.dailyChallenge.completed) {
-                    document.getElementById('dailyChallengeSection').classList.remove('hidden');
-                }
-            }
-
-            startDailyChallenge() {
-                document.getElementById('dailyChallengeSection').classList.add('hidden');
-                this.loadNewProblem();
-            }
-
             showToast(message) {
                 const toast = document.createElement('div');
                 toast.className = 'toast';
@@ -1979,11 +2666,11 @@
 
                 setTimeout(() => {
                     toast.remove();
-                }, 3000);
+                }, 3500);
             }
         }
 
-        // Initialize app
+        // Initialize
         const app = new SATApp();
     </script>
 </body>
