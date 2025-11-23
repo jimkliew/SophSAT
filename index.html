@@ -2330,17 +2330,49 @@
                 const problems = this.getProblemsForCategory();
                 if (problems.length === 0) return;
 
-                // Spaced repetition
+                // Sort by difficulty: easy -> medium -> hard
+                const difficultyOrder = { 'easy': 1, 'medium': 2, 'hard': 3 };
+                const sortedProblems = [...problems].sort((a, b) => {
+                    const diffA = difficultyOrder[a.difficulty || 'medium'];
+                    const diffB = difficultyOrder[b.difficulty || 'medium'];
+                    return diffA - diffB;
+                });
+
+                // Progressive difficulty: show easier problems first
+                const solvedCount = this.stats.totalSolved;
+                let problem;
+
+                // Spaced repetition for incorrect problems (40% chance)
                 const incorrectProblems = problems.filter(p => {
                     const stat = this.stats.categoryStats[p.id];
                     return stat && stat.incorrect > 0;
                 });
 
-                let problem;
                 if (incorrectProblems.length > 0 && Math.random() < 0.4) {
                     problem = incorrectProblems[Math.floor(Math.random() * incorrectProblems.length)];
                 } else {
-                    problem = problems[Math.floor(Math.random() * problems.length)];
+                    // Progressive difficulty based on performance
+                    const accuracy = this.stats.totalSolved > 0
+                        ? (this.stats.correct / this.stats.totalSolved) * 100
+                        : 50;
+
+                    let availableProblems;
+                    if (accuracy < 60 || solvedCount < 5) {
+                        // Struggling or new: show easy problems
+                        availableProblems = sortedProblems.filter(p => (p.difficulty || 'medium') === 'easy');
+                        if (availableProblems.length === 0) availableProblems = sortedProblems;
+                    } else if (accuracy < 80 || solvedCount < 15) {
+                        // Improving: show easy and medium
+                        availableProblems = sortedProblems.filter(p =>
+                            ['easy', 'medium'].includes(p.difficulty || 'medium')
+                        );
+                        if (availableProblems.length === 0) availableProblems = sortedProblems;
+                    } else {
+                        // Doing well: show all, weighted toward harder
+                        availableProblems = sortedProblems;
+                    }
+
+                    problem = availableProblems[Math.floor(Math.random() * availableProblems.length)];
                 }
 
                 this.currentProblem = { ...problem, startTime: Date.now() };
